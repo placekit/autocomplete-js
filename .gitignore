@@ -4,6 +4,7 @@
 .DS_Store
 /NOTES.md
 /demo
+/publish.sh
 
 # dependencies
 node_modules
