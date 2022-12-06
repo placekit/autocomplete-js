@@ -6,6 +6,13 @@
   <b>All-in-one autocomplete experience for your web apps</b>
 </p>
 
+<div align="center">
+
+  [![NPM](https://img.shields.io/npm/v/@placekit/autocomplete-js?style=flat-square)](https://www.npmjs.com/package/@placekit/autocomplete-js?activeTab=readme)
+  [![LICENSE](https://img.shields.io/github/license/placekit/autocomplete-js?style=flat-square)](./LICENSE)
+  
+</div>
+
 <p align="center">
   <a href="#-quick-start">Quick start</a> • 
   <a href="#-features">Features</a> • 
