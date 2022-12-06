@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>PlaceKit Autocomplete</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js/dist/placekit-autocomplete.min.css" />
+  </head>
+  <body class="dark" style="background:#101828">
+    <div class="pka-input">
+      <button
+        class="pka-input-geolocation"
+        title="Activate geolocation"
+        role="switch"
+        aria-checked="false"
+        id="placekit-geolocation"
+      >
+        <span class="pka-sr-only">Activate geolocation</span>
+      </button>
+      <button
+        class="pka-input-clear"
+        title="Clear value"
+        id="placekit-clear"
+        aria-hidden="true"
+      >
+        <span class="pka-sr-only">Clear value</span>
+      </button>
+      <input
+        type="search"
+        name="place"
+        placeholder="Search place..."
+        id="placekit-input"
+      />
+    </div>
+  
+    <script src="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js"></script>
+    <script>
+      // instantiate PlaceKit Autocomplete JS
+      const pka = placekitAutocomplete('<your-api-key>', {
+        target: '#placekit-input',
+      });
+  
+      // request geolocation on click
+      const geolocationButton = document.querySelector('#placekit-geolocation');
+      geolocationButton.addEventListener('click', () => {
+        pk.requestGeolocation().then((pos) => {
+          geolocationButton.classList.add('pka-enabled');
+          geolocationButton.setAttribute('aria-checked', true);
+        }).catch(() => {
+          geolocationButton.classList.remove('pka-enabled');
+          geolocationButton.setAttribute('aria-checked', false);
+        });
+      });
+  
+      // clear input on click
+      const clearButton = document.querySelector('#placekit-clear');
+      clearButton.addEventListener('click', pk.clear);
+  
+      // hide clear button when input is empty
+      pka.input.addEventListener('input', (e) => {
+        clearButton.setAttribute('aria-hidden', !e.target.value);
+      });
+    </script>
+  </body>
+  </html>

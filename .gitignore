@@ -1,0 +1,15 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# misc
+.DS_Store
+/NOTES.md
+/demo
+
+# dependencies
+node_modules
+
+# build
+/dist
+
+# log files
+*.log*

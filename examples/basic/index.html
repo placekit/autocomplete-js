@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PlaceKit Autocomplete</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js/dist/placekit-autocomplete.min.css" />
+</head>
+<body>
+  <input
+    type="search"
+    name="place"
+    placeholder="Search place..."
+    class="pka-input"
+    id="placekit-input"
+  />
+
+  <script src="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js"></script>
+  <script>
+    const pka = placekitAutocomplete('<youzr-api-key>', {
+      target: '#placekit-input',
+    });
+  </script>
+</body>
+</html>

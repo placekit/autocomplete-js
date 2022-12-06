@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PlaceKit Autocomplete</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js/dist/placekit-autocomplete.min.css" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+</head>
+<body class="bg-gray-50 px-4 py-8 lg:p-16">
+  <form id="form" class="max-w-xl mx-auto grid sm:grid-cols-3 gap-6 p-6 rounded-lg bg-white shadow-lg">
+    <div class="space-y-1 col-span-full">
+      <label for="address" class="block text-sm font-medium text-gray-700">
+        Address
+      </label>
+      <input
+        type="search"
+        name="address"
+        placeholder="Search place..."
+        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+        id="placekit-input"
+      />
+    </div>
+    <div class="space-y-1">
+      <label for="city" class="block text-sm font-medium text-gray-700">
+        City
+      </label>
+      <input
+        type="text"
+        name="city"
+        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+      />
+    </div>
+    <div class="space-y-1">
+      <label for="zipcode" class="block text-sm font-medium text-gray-700">
+        ZIP Code
+      </label>
+      <input
+        type="text"
+        name="zipcode"
+        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+      />
+    </div>
+    <div class="space-y-1">
+      <label for="country" class="block text-sm font-medium text-gray-700">
+        Country
+      </label>
+      <input
+        type="text"
+        name="country"
+        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+      />
+    </div>
+  </form>
+
+  <script src="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js"></script>
+  <script>
+    // instantiate PlaceKit Autocomplete JS
+    const pka = placekitAutocomplete('<your-api-key>', {
+      target: '#placekit-input',
+    });
+
+    // inject values when user picks an address
+    const form = document.querySelector('#form');
+    pka.on('pick', (value, item) => {
+      for (const name of ['city', 'zipcode', 'country']) {
+        form.querySelector(`input[name="${name}"]`).value = item[name];
+      }
+    });
+  </script>
+</body>
+</html>
