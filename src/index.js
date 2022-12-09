@@ -349,6 +349,8 @@ module.exports = (apiKey, options = {}) => {
   // Bind events
   // ----------------------------------------
   onResize();
+  const resizeObserver = new ResizeObserver(onResize);
+  resizeObserver.observe(input);
 
   input.addEventListener('input', onInput);
   input.addEventListener('click', onFocus);
@@ -356,7 +358,6 @@ module.exports = (apiKey, options = {}) => {
   suggestionsList.addEventListener('click', onPick);
   window.addEventListener('keydown', onKeyNav);
   window.addEventListener('click', onClickOutside);
-  window.addEventListener('resize', onResize);
 
   // Return instance
   // ----------------------------------------
@@ -481,6 +482,7 @@ module.exports = (apiKey, options = {}) => {
     window.removeEventListener('keydown', onKeyNav);
     window.removeEventListener('click', onClickOutside);
     window.removeEventListener('resize', onResize);
+    resizeObserver.unobserve(input);
     suggestionsPanel.remove();
   };
 
