@@ -1,15 +1,15 @@
-import path from 'path';
+const path = require('path');
 
-import autoprefixer from 'autoprefixer';
-import commonjs from '@rollup/plugin-commonjs';
-import { nodeResolve } from '@rollup/plugin-node-resolve';
-import replace from '@rollup/plugin-replace';
-import cleanup from 'rollup-plugin-cleanup';
-import copy from 'rollup-plugin-copy';
-import postcss from 'rollup-plugin-postcss';
-import postcssBanner from 'postcss-banner';
+const autoprefixer = require('autoprefixer');
+const commonjs = require('@rollup/plugin-commonjs');
+const { nodeResolve } = require('@rollup/plugin-node-resolve');
+const replace = require('@rollup/plugin-replace');
+const cleanup = require('rollup-plugin-cleanup');
+const copy = require('rollup-plugin-copy');
+const postcss = require('rollup-plugin-postcss');
+const postcssBanner = require('postcss-banner');
 
-import pkg from './package.json' assert { type: "json" };
+const pkg = require('./package.json');
 const banner = [
   `/*! ${pkg.name} v${pkg.version}`,
   '© placekit.io',
@@ -17,7 +17,7 @@ const banner = [
   `${pkg.homepage} */`,
 ].join(' | ');
 
-export default {
+module.exports = {
   input: 'src/index.js',
   output: [
     {
