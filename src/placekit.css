@@ -93,8 +93,6 @@ body[data-theme="dark"] .pka-input {
   width: 100%;
   border: none;
   background-color: transparent;
-  box-shadow: none;
-  outline: none;
   line-height: inherit;
   font-size: 1em;
   font-family: inherit;
@@ -111,6 +109,12 @@ input.pka-input:focus,
   outline: none;
   box-shadow: 0 0 0 1px rgb(var(--pka-color-accent));
   border-color: rgb(var(--pka-color-accent));
+}
+
+.pka-input:not(input) input:focus {
+  outline: none;
+  box-shadow: none;
+  border: none;
 }
 
 input.pka-input,
