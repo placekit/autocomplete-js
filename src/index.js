@@ -157,12 +157,11 @@ module.exports = (apiKey, options = {}) => {
   // Popper.js for panel positionning
   const popperInstance = createPopper(input, suggestionsPanel, {
     placement: 'bottom-start',
+    container: 'body',
     modifiers: [
       {
-        name: 'preventOverflow',
-        options: {
-          padding: 8,
-        },
+        name: 'flip',
+        enabled: false,
       },
       {
         name: 'offset',
