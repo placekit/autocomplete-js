@@ -155,9 +155,9 @@ console.log(pka.options); // { "target": <input ... />, "language": "en", "maxRe
 | `offset` | AutoComplete | `integer` | `4` | Gap between input and suggestions list in pixels. |
 | `template` | AutoComplete | `(item: object) => string` | [see index.js](./src/index.js#L24-L39) | Suggestion item formatting function. |
 | `formatValue` | AutoComplete | `(item: object) => string` | [see index.js](./src/index.js#L40) | Input value formatting function when selected from list. |
-| `strategy` | AutoComplete | `'absolute' | 'fixed'` | `absolute` | [Popper positionning strategy](https://popper.js.org/docs/v2/constructors/#strategy) |
-| `flip` | AutoComplete | `boolean` | `false` | Flip position top when overflowing |
-| `className` | AutoComplete | `string` | `undefined` | Additional suggestions panel CSS class(es) |
+| `strategy` | AutoComplete | `'absolute' | 'fixed'` | `absolute` | [Popper positioning strategy](https://popper.js.org/docs/v2/constructors/#strategy) |
+| `flip` | AutoComplete | `boolean` | `false` | Flip position top when overflowing. |
+| `className` | AutoComplete | `string` | `undefined` | Additional suggestions panel CSS class(es). |
 | `maxResults` | JS client | `integer` | `5` | Number of results per page. |
 | `language` | JS client | `string?` | `undefined` | Language of the results, two-letter ISO language code. |
 | `types` | JS client | `string[]?` | `undefined` | Type of results to show. Array of accepted values: `street`, `city`, `country`, `airport`, `bus`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all. |
