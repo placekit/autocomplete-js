@@ -104,7 +104,6 @@ module.exports = (apiKey, options = {}) => {
     formatValue: (item) => item.name,
     strategy: 'absolute',
     flip: false,
-    className: '',
     ...options,
   };
 
@@ -136,7 +135,9 @@ module.exports = (apiKey, options = {}) => {
   // suggestions panel
   const suggestionsPanel = document.createElement('div');
   suggestionsPanel.classList.add('pka-suggestions');
-  suggestionsPanel.classList.add(...className.split(/\s+/));
+  if (typeof className === 'string') {
+    suggestionsPanel.classList.add(...className.split(/\s+/));
+  }
 
   // suggestions list
   const suggestionsList = document.createElement('div');
