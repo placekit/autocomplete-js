@@ -51,6 +51,9 @@ require('./placekit.css');
  * @prop {number} [offset] Suggestions panel vertical offset (in px)
  * @prop {Template} [template] Suggestion item template
  * @prop {FormatValue} [formatValue] Return value formatting function
+ * @prop {'absolute'|'fixed'} [strategy] Popper positionning strategy (see https://popper.js.org/docs/v2/constructors/#strategy)
+ * @prop {boolean} [flip] Flip when overflowing (defaults to false)
+ * @prop {string} [className] Additional panel class name
  */
 
 /**
@@ -75,6 +78,9 @@ module.exports = (apiKey, options = {}) => {
     offset,
     template,
     formatValue,
+    strategy,
+    flip,
+    className,
     ...pkOptions
   } = {
     target: '#placekit',
@@ -96,16 +102,19 @@ module.exports = (apiKey, options = {}) => {
       `;
     },
     formatValue: (item) => item.name,
+    strategy: 'absolute',
+    flip: false,
+    className: '',
     ...options,
   };
 
   // throw error if invalid options
   if (!template?.call) {
-    throw (`Error: options.template must be a function returning a string.`);
+    throw (`TypeError: options.template must be a function returning a string.`);
   }
 
   if (!formatValue?.call) {
-    throw (`Error: options.formatValue must be a function returning a string.`);
+    throw (`TypeError: options.formatValue must be a function returning a string.`);
   }
 
   const input = typeof target === 'string' ? document.querySelector(target) : target;
@@ -127,6 +136,7 @@ module.exports = (apiKey, options = {}) => {
   // suggestions panel
   const suggestionsPanel = document.createElement('div');
   suggestionsPanel.classList.add('pka-suggestions');
+  suggestionsPanel.classList.add(...className.split(/\s+/));
 
   // suggestions list
   const suggestionsList = document.createElement('div');
@@ -157,11 +167,11 @@ module.exports = (apiKey, options = {}) => {
   // Popper.js for panel positionning
   const popperInstance = createPopper(input, suggestionsPanel, {
     placement: 'bottom-start',
-    container: 'body',
+    strategy,
     modifiers: [
       {
         name: 'flip',
-        enabled: false,
+        enabled: flip,
       },
       {
         name: 'offset',
