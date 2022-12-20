@@ -41,4 +41,7 @@ export type PKAOptions = PKOptions & {
   offset?: number;
   template?: (item: PKResult) => string;
   formatValue?: (item: PKResult) => string;
+  strategy?: 'absolute' | 'fixed';
+  flip?: boolean;
+  className?: string;
 };
