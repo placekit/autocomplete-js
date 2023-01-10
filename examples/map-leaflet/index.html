@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PlaceKit Autocomplete x Leaflet</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.0.0-alpha.6/dist/placekit-autocomplete.min.css" />
+  <style>
+    .wrapper {
+      position: relative;
+    }
+
+    .search {
+      position: absolute;
+      inset: .5rem auto auto .5rem;
+      width: 360px;
+      z-index: 500;
+    }
+
+    .pka-input {
+      width: 100%;
+    }
+
+    .map {
+      width: 600px;
+      height: 400px;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrapper">
+    <div class="search">
+      <input
+        type="search"
+        name="place"
+        placeholder="Search place..."
+        class="pka-input"
+        id="placekit-input"
+      />
+    </div>
+    <div id="map" class="map"></div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js"></script>
+  <script>
+    // init Leaflet map
+    const map = L.map('map', {
+      zoomControl: false,
+    }).setView([48.870820, 2.304442], 12);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+    }).addTo(map);
+    L.control.zoom({
+      position: 'topright',
+    }).addTo(map);
+    
+    // init PlaceKit autocomplete
+    const pka = placekitAutocomplete('<your-api-key>', {
+      target: '#placekit-input',
+    });
+
+    // add/update marker on pick
+    let marker;
+    pka.on('pick', (_value, item) => {
+      if (marker) {
+        marker.setLatLng([item.lat, item.lng]);
+      } else {
+        marker = L.marker([item.lat, item.lng]).addTo(map);
+      }
+      map.setView(marker.getLatLng(), 17);
+    });
+  </script>
+</body>
+</html>
