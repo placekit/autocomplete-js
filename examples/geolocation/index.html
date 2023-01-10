@@ -43,7 +43,7 @@
     // request geolocation on click
     const geolocationButton = document.querySelector('#placekit-geolocation');
     geolocationButton.addEventListener('click', () => {
-      pk.requestGeolocation().then((pos) => {
+      pka.requestGeolocation().then((pos) => {
         geolocationButton.classList.add('pka-enabled');
         geolocationButton.setAttribute('aria-checked', true);
       }).catch(() => {
@@ -54,7 +54,7 @@
 
     // clear input on click
     const clearButton = document.querySelector('#placekit-clear');
-    clearButton.addEventListener('click', pk.clear);
+    clearButton.addEventListener('click', pka.clear);
 
     // hide clear button when input is empty
     pka.input.addEventListener('input', (e) => {

@@ -33,20 +33,38 @@
 <body>
   <main class="wrapper">
     <div class="search">
-      <input
-        type="search"
-        name="place"
-        placeholder="Search place..."
-        class="pka-input"
-        id="placekit-input"
-      />
+      <div class="pka-input">
+        <button
+          class="pka-input-geolocation"
+          title="Activate geolocation"
+          role="switch"
+          aria-checked="false"
+          id="placekit-geolocation"
+        >
+          <span class="pka-sr-only">Activate geolocation</span>
+        </button>
+        <button
+          class="pka-input-clear"
+          title="Clear value"
+          id="placekit-clear"
+          aria-hidden="true"
+        >
+          <span class="pka-sr-only">Clear value</span>
+        </button>
+        <input
+          type="search"
+          name="place"
+          placeholder="Search place..."
+          id="placekit-input"
+        />
+      </div>
     </div>
     <div id="map" class="map"></div>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js"></script>
   <script>
-    // init Leaflet map
+    // instantiate Leaflet map
     const map = L.map('map', {
       zoomControl: false,
     }).setView([48.870820, 2.304442], 12);
@@ -57,21 +75,50 @@
     L.control.zoom({
       position: 'topright',
     }).addTo(map);
+
+    // set unique marker
+    let marker;
+    const updateMarker = (lat, lng) => {
+      if (marker) {
+        marker.setLatLng([lat, lng]);
+      } else {
+        marker = L.marker([lat, lng]).addTo(map);
+      }
+      map.setView(marker.getLatLng(), 17);
+    };
     
-    // init PlaceKit autocomplete
+    // instantiate PlaceKit Autocomplete JS
     const pka = placekitAutocomplete('<your-api-key>', {
       target: '#placekit-input',
     });
 
-    // add/update marker on pick
-    let marker;
-    pka.on('pick', (_value, item) => {
-      if (marker) {
-        marker.setLatLng([item.lat, item.lng]);
-      } else {
-        marker = L.marker([item.lat, item.lng]).addTo(map);
-      }
-      map.setView(marker.getLatLng(), 17);
+    // request geolocation on click
+    const geolocationButton = document.querySelector('#placekit-geolocation');
+    geolocationButton.addEventListener('click', () => {
+      pka.requestGeolocation().then(() => {
+        geolocationButton.classList.add('pka-enabled');
+        geolocationButton.setAttribute('aria-checked', true);
+      }).catch(() => {
+        geolocationButton.classList.remove('pka-enabled');
+        geolocationButton.setAttribute('aria-checked', false);
+      });
+    });
+
+    // clear input on click
+    const clearButton = document.querySelector('#placekit-clear');
+    clearButton.addEventListener('click', pka.clear);
+
+    // hide clear button when input is empty
+    pka.input.addEventListener('input', (e) => {
+      clearButton.setAttribute('aria-hidden', !e.target.value);
+    });
+
+    // add/update marker on pick/geolocation
+    pka.on('pick', (_, item) => {
+      updateMarker(item.lat, item.lng);
+    });
+    pka.on('geolocation', (_, pos) => {
+      updateMarker(pos.coords.latitude, pos.coords.longitude);
     });
   </script>
 </body>
