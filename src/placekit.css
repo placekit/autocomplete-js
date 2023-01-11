@@ -372,6 +372,10 @@ body[data-theme="dark"] .pka-suggestions-item-label-name {
   color: rgb(var(--pka-color-white));
 }
 
+.pka-suggestions-item.pka-active .pka-suggestions-item-label-name mark {
+  text-decoration-color: rgba(var(--pka-color-white), .5);
+}
+
 .pka-suggestions-item.pka-active .pka-suggestions-item-icon {
   background-color: rgba(var(--pka-color-white), .8);
 }
