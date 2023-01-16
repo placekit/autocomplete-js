@@ -111,11 +111,9 @@
     clearButton.addEventListener('click', pka.clear);
 
     // hide clear button when input is empty
-    const onChange = (e) => {
-      clearButton.setAttribute('aria-hidden', !e.target.value);
-    };
-    pka.input.addEventListener('input', onChange);
-    pka.input.addEventListener('change', onChange);
+    pka.on('empty', (isEmpty) => {
+      clearButton.setAttribute('aria-hidden', isEmpty);
+    });
 
     // add/update marker on pick/geolocation
     pka.on('pick', (_, item) => {

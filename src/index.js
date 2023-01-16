@@ -272,6 +272,7 @@ module.exports = (apiKey, options = {}) => {
       togglePanel(false);
       isFreeForm = false;
       fireEvent('freeForm', false);
+      fireEvent('empty', false);
       fireEvent('pick', input.value, current.item, index);
     }
   };
@@ -285,6 +286,7 @@ module.exports = (apiKey, options = {}) => {
       .catch((err) => fireEvent('error', err));
     isFreeForm = true;
     fireEvent('freeForm', true);
+    fireEvent('empty', !input.value);
   };
 
   // open panel on input focus

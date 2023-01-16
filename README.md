@@ -191,6 +191,7 @@ pka.on('open', () => {})
   .on('error', (error) => {})
   .on('freeForm', (isFreeForm) => {})
   .on('geolocation', (hasGeolocation, position) => {});
+  .on('empty', (isEmpty) => {});
 ```
 
 If you register a same event twice, the first one will be replaced.
@@ -239,7 +240,7 @@ Triggered on server error.
 
 ##### `freeForm`
 
-Triggered when `isFreeForm` value changes.
+Triggered when typing or picking a suggestion.
 
 | Parameter | Type | Description |
 | --- | --- | --- |
@@ -257,6 +258,14 @@ Triggered when `hasGeolocation` value changes (a.k.a. when `pka.requestGeolocati
 | `position` | [`GeolocationPosition`](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition) | Passed when `hasGeolocation` is `true`. |
 
 Mostly intended to update a local React state, because `pka.hasGeolocation` isn't stateful.
+
+##### `empty`
+
+Triggered when typing or picking a suggestion.
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `isEmpty` | `boolean` | `true` if input is empty. |
 
 ### `pka.handlers`
 
