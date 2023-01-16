@@ -241,7 +241,7 @@ Triggered on server error.
 
 ##### `empty`
 
-Triggered when typing or picking a suggestion.
+Triggered when input value changes.
 
 | Parameter | Type | Description |
 | --- | --- | --- |
@@ -249,7 +249,7 @@ Triggered when typing or picking a suggestion.
 
 ##### `freeForm`
 
-Triggered when typing or picking a suggestion.
+Triggered when input value changes.
 
 | Parameter | Type | Description |
 | --- | --- | --- |
