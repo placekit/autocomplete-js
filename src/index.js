@@ -183,11 +183,14 @@ module.exports = (apiKey, options = {}) => {
     ],
   });
 
-  // Utility functions
+  // States
   // ----------------------------------------
+  let isEmpty = true;
   let isFreeForm = true;
   let suggestions = [];
 
+  // Utility functions
+  // ----------------------------------------
   // fire registered event handler
   const fireEvent = (event, ...args) => {
     if (handlers[event]?.call) {
@@ -270,9 +273,10 @@ module.exports = (apiKey, options = {}) => {
       input.dispatchEvent(new Event('change'));
       input.focus();
       togglePanel(false);
+      isEmpty = false;
       isFreeForm = false;
-      fireEvent('freeForm', false);
       fireEvent('empty', false);
+      fireEvent('freeForm', false);
       fireEvent('pick', input.value, current.item, index);
     }
   };
@@ -284,9 +288,10 @@ module.exports = (apiKey, options = {}) => {
     pk.search(input.value)
       .then(({ results }) => updateSuggestions(input.value.trim(), results))
       .catch((err) => fireEvent('error', err));
+    isEmpty = !input.value;
     isFreeForm = true;
+    fireEvent('empty', isEmpty);
     fireEvent('freeForm', true);
-    fireEvent('empty', !input.value);
   };
 
   // open panel on input focus
@@ -404,6 +409,16 @@ module.exports = (apiKey, options = {}) => {
    */
   Object.defineProperty(client, 'handlers', {
     get: () => handlers,
+  });
+
+  /**
+   * Make `client.isEmpty` read-only
+   * @member {boolean}
+   * @memberof client
+   * @readonly
+   */
+  Object.defineProperty(client, 'isEmpty', {
+    get: () => isEmpty,
   });
 
   /**

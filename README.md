@@ -109,6 +109,7 @@ If you have trouble importing CSS from `node_modules`, copy/paste [its content](
 - [`pka.configure()`](#pkaconfigure)
 - [`pka.on()`](#pkaon)
 - [`pka.handlers`](#pkahandlers)
+- [`pka.isEmpty`](#pkaisEmpty)
 - [`pka.isFreeForm`](#pkaisFreeForm)
 - [`pka.requestGeolocation()`](#pkarequestGeolocation)
 - [`pka.hasGeolocation`](#pkahasGeolocation)
@@ -189,9 +190,9 @@ pka.on('open', () => {})
   .on('results', (query, results) => {})
   .on('pick', (value, item, index) => {})
   .on('error', (error) => {})
+  .on('empty', (isEmpty) => {})
   .on('freeForm', (isFreeForm) => {})
   .on('geolocation', (hasGeolocation, position) => {});
-  .on('empty', (isEmpty) => {});
 ```
 
 If you register a same event twice, the first one will be replaced.
@@ -238,6 +239,14 @@ Triggered on server error.
 | --- | --- | --- |
 | `error` | `object` | Error details. |
 
+##### `empty`
+
+Triggered when typing or picking a suggestion.
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `isEmpty` | `boolean` | `true` if input is empty. |
+
 ##### `freeForm`
 
 Triggered when typing or picking a suggestion.
@@ -245,8 +254,6 @@ Triggered when typing or picking a suggestion.
 | Parameter | Type | Description |
 | --- | --- | --- |
 | `isFreeForm` | `boolean` | `true` on user input, `false` on `pick` event. |
-
-Mostly intended to update a local React state, because `pka.isFreeForm` isn't stateful.
 
 ##### `geolocation`
 
@@ -257,16 +264,6 @@ Triggered when `hasGeolocation` value changes (a.k.a. when `pka.requestGeolocati
 | `hasGeolocation` | `boolean` | `true` if granted, `false` if denied. |
 | `position` | [`GeolocationPosition`](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition) | Passed when `hasGeolocation` is `true`. |
 
-Mostly intended to update a local React state, because `pka.hasGeolocation` isn't stateful.
-
-##### `empty`
-
-Triggered when typing or picking a suggestion.
-
-| Parameter | Type | Description |
-| --- | --- | --- |
-| `isEmpty` | `boolean` | `true` if input is empty. |
-
 ### `pka.handlers`
 
 Reads registered event handlers, read-only.
@@ -274,6 +271,14 @@ Reads registered event handlers, read-only.
 ```js
 pka.on('open', () => {});
 console.log(pka.handlers); // { open: ... }
+```
+
+### `pka.isEmpty`
+
+Read-only boolean, `true` if the input is empty.
+
+```js
+console.log(pka.isEmpty); // true or false
 ```
 
 ### `pka.isFreeForm`
