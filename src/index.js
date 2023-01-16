@@ -183,11 +183,14 @@ module.exports = (apiKey, options = {}) => {
     ],
   });
 
-  // Utility functions
+  // States
   // ----------------------------------------
+  let isEmpty = true;
   let isFreeForm = true;
   let suggestions = [];
 
+  // Utility functions
+  // ----------------------------------------
   // fire registered event handler
   const fireEvent = (event, ...args) => {
     if (handlers[event]?.call) {
@@ -270,7 +273,9 @@ module.exports = (apiKey, options = {}) => {
       input.dispatchEvent(new Event('change'));
       input.focus();
       togglePanel(false);
+      isEmpty = false;
       isFreeForm = false;
+      fireEvent('empty', false);
       fireEvent('freeForm', false);
       fireEvent('pick', input.value, current.item, index);
     }
@@ -283,7 +288,9 @@ module.exports = (apiKey, options = {}) => {
     pk.search(input.value)
       .then(({ results }) => updateSuggestions(input.value.trim(), results))
       .catch((err) => fireEvent('error', err));
+    isEmpty = !input.value;
     isFreeForm = true;
+    fireEvent('empty', isEmpty);
     fireEvent('freeForm', true);
   };
 
@@ -405,6 +412,16 @@ module.exports = (apiKey, options = {}) => {
   });
 
   /**
+   * Make `client.isEmpty` read-only
+   * @member {boolean}
+   * @memberof client
+   * @readonly
+   */
+  Object.defineProperty(client, 'isEmpty', {
+    get: () => isEmpty,
+  });
+
+  /**
    * Make `client.isFreeForm` read-only
    * @desc Enable devs to handle strict address validation
    * @member {boolean}
@@ -416,13 +433,13 @@ module.exports = (apiKey, options = {}) => {
   });
 
   /**
-   * Make `client.hasGeolocation` read-only
+   * Forward `pk.hasGeolocation`
    * @member {boolean}
    * @memberof client
    * @readonly
    */
   Object.defineProperty(client, 'hasGeolocation', {
-    get: () => hasGeolocation,
+    get: () => pk.hasGeolocation,
   });
 
   /**

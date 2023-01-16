@@ -59,11 +59,9 @@
       clearButton.addEventListener('click', pka.clear);
 
       // hide clear button when input is empty
-      const onChange = (e) => {
-        clearButton.setAttribute('aria-hidden', !e.target.value);
-      };
-      pka.input.addEventListener('input', onChange);
-      pka.input.addEventListener('change', onChange);
+      pka.on('empty', (isEmpty) => {
+        clearButton.setAttribute('aria-hidden', isEmpty);
+      });
     </script>
   </body>
   </html>
