@@ -14,9 +14,11 @@ export interface PKAClient {
   on(event: 'results', handler?: PKAHandlers['results']): PKAClient;
   on(event: 'pick', handler?: PKAHandlers['pick']): PKAClient;
   on(event: 'error', handler?: PKAHandlers['error']): PKAClient;
+  on(event: 'empty', handler?: PKAHandlers['empty']): PKAClient;
   on(event: 'freeForm', handler?: PKAHandlers['freeForm']): PKAClient;
   on(event: 'geolocation', handler?: PKAHandlers['geolocation']): PKAClient;
   readonly handlers: Partial<PKAHandlers>;
+  readonly isEmpty: boolean;
   readonly isFreeForm: boolean;
   readonly hasGeolocation: boolean;
   requestGeolocation(opts?: Object, cancelUpdate?: boolean): Promise<GeolocationPosition>;
@@ -32,6 +34,7 @@ export type PKAHandlers = {
   results: (query: string, results: PKResult[]) => void;
   pick: (value: string, item: PKResult, index: number) => void;
   error: (error: Object) => void;
+  empty: (isEmpty: boolean) => void;
   freeForm: (isFreeForm: boolean) => void;
   geolocation: (hasGeolocation: boolean, position?: GeolocationPosition) => void;
 };
