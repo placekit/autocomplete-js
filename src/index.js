@@ -433,13 +433,13 @@ module.exports = (apiKey, options = {}) => {
   });
 
   /**
-   * Make `client.hasGeolocation` read-only
+   * Forward `pk.hasGeolocation`
    * @member {boolean}
    * @memberof client
    * @readonly
    */
   Object.defineProperty(client, 'hasGeolocation', {
-    get: () => hasGeolocation,
+    get: () => pk.hasGeolocation,
   });
 
   /**
