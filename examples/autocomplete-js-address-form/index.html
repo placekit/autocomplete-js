@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>PlaceKit Autocomplete</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.0.0-alpha.6/dist/placekit-autocomplete.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.0.0-alpha.9/dist/placekit-autocomplete.min.css" />
   <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
 </head>
 <body class="bg-gray-50 px-4 py-8 lg:p-16">
@@ -58,6 +58,7 @@
     // instantiate PlaceKit Autocomplete JS
     const pka = placekitAutocomplete('<your-api-key>', {
       target: '#placekit-input',
+      countries: ['fr'],
     });
 
     // inject values when user picks an address

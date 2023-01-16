@@ -45,7 +45,7 @@ For React implementations, check our [PlaceKit Autocomplete React](https://githu
 First, import the library and the default stylesheet into the `<head>` tag in your HTML:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.0.0-alpha.6/dist/placekit-autocomplete.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.0.0-alpha.9/dist/placekit-autocomplete.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js"></script>
 ```
 
@@ -65,7 +65,7 @@ Or if you are using native ES Modules:
 
 ```html
 <script type="module">
-  import placekit from 'https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.0.0-alpha.6/dist/placekit-autocomplete.esm.js';
+  import placekit from 'https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.0.0-alpha.9/dist/placekit-autocomplete.esm.js';
   const pka = placekitAutocomplete(/* ... */);
   // ...
 </script>
@@ -124,8 +124,9 @@ PlaceKit Autocomplete initialization function returns a PlaceKit Autocomplete cl
 
 ```js
 const pka = placekitAutocomplete('<your-api-key>', {
-  language: 'en',
+  language: 'fr',
   maxResults: 10,
+  countries: ['fr'],
 });
 ```
 
@@ -164,6 +165,8 @@ console.log(pka.options); // { "target": <input ... />, "language": "en", "maxRe
 | `types` | JS client | `string[]?` | `undefined` | Type of results to show. Array of accepted values: `street`, `city`, `country`, `airport`, `bus`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all. |
 | `countries` | JS client | `string[]?` | `undefined` | Limit results to given countries. Array of two-letter ISO country codes. |
 | `coordinates` | JS client | `string?` | `undefined` | Coordinates to search around. Automatically set when calling [`pka.requestGeolocation()`](#pkarequestGeolocation). |
+
+**Important**: the `countries` option is **required** at search time, but we like to keep it optional across all methods so developers remain free on when and how to define it.
 
 ### `pka.configure()`
 
