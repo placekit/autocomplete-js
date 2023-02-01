@@ -166,7 +166,7 @@ console.log(pka.options); // { "target": <input ... />, "language": "en", "maxRe
 | `countries` | JS client | `string[]?` | `undefined` | Limit results to given countries. Array of two-letter ISO country codes. |
 | `coordinates` | JS client | `string?` | `undefined` | Coordinates to search around. Automatically set when calling [`pka.requestGeolocation()`](#pkarequestGeolocation). |
 
-**Important**: the `countries` option is **required** at search time, but we like to keep it optional across all methods so developers remain free on when and how to define it.
+**Important**: the `countries` option is **required** at search time, but we like to keep it optional across all methods so developers remain free on when and how to define it. If you don't know ahead of time which country your users will search addresses in, consider using our package [TimeZones Countries](https://github.com/placekit/tzc).
 
 ### `pka.configure()`
 
