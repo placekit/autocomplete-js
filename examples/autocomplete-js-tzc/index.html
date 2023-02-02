@@ -20,7 +20,7 @@
   <script>
     const pka = placekitAutocomplete('<your-api-key>', {
       target: '#placekit-input',
-      countries: tzc(), // get country codes from user's timezone with @placekit/tzc
+      countries: [tzc()], // get country code from user's timezone with @placekit/tzc
     });
   </script>
 </body>
