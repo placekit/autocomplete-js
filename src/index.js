@@ -40,7 +40,9 @@ require('./placekit.css');
  * @prop {number} [maxResults] Max results to return
  * @prop {string[]} [types] Results type
  * @prop {string} [language] Results language (ISO 639-1)
- * @prop {string[]} [countries] Countries whitelist (ISO 639-1)
+ * @prop {boolean} [countryByIP] Get country from IP
+ * @prop {boolean} [forwardIP] Set `x-forwarded-for` header to override IP when `countryByIP` is `true`.
+ * @prop {string[]} [countries] Countries to search in, or fallback to if `countryByIP` is true (ISO 639-1)
  * @prop {string} [coordinates] Coordinates search starts around
  */
 
