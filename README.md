@@ -90,7 +90,7 @@ const placekitAutocomplete = require('@placekit/autocomplete-js');
 // ES6 Modules syntax:
 import placekit from '@placekit/autocomplete-js';
 
-const pka = placekit('<your-api-key>', {
+const pka = placekitAutocomplete('<your-api-key>', {
   target: '#placekit',
   countries: ['fr'],
   // other options...
@@ -125,6 +125,7 @@ PlaceKit Autocomplete initialization function returns a PlaceKit Autocomplete cl
 
 ```js
 const pka = placekitAutocomplete('<your-api-key>', {
+  target: '#placekit',
   countries: ['fr'],
   maxResults: 10,
 });
@@ -186,7 +187,7 @@ Supported countries are `be`, `ca`, `ch`, `de`, `es`, `fr`, `gb`, `it`, `nl`, `p
 Set `countryByIP` to `true` when you don't know which country users will search addresses in. In that case, the option `countries` will be used as a fallback if the user's country is not supported:
 
 ```js
-pk.search('123 ave', {
+pka.configure({
   countryByIP: true, // use user's country, based on their IP
   countries: ['fr', 'be'], // returning results from France and Belgium if user's country is not supported
 });
