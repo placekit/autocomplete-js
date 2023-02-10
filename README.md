@@ -54,7 +54,8 @@ After importing the library, `placekitAutocomplete` becomes available as a globa
 <input type="search" placeholder="Search place..." class="pka-input" id="placekit" />
 <script>
   const pka = placekitAutocomplete('<your-api-key>', {
-    inputSelector: '#placekit',
+    target: '#placekit',
+    countries: ['fr'],
     // other options...
   });
 </script>
@@ -91,6 +92,7 @@ import placekit from '@placekit/autocomplete-js';
 
 const pka = placekit('<your-api-key>', {
   target: '#placekit',
+  countries: ['fr'],
   // other options...
 });
 ```
