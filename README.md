@@ -3,7 +3,7 @@
 </h1>
 
 <p align="center">
-  <b>All-in-one autocomplete experience for your web apps</b>
+  <b>All-in-one address autocomplete experience for your web apps</b>
 </p>
 
 <div align="center">
@@ -18,7 +18,6 @@
   <a href="#-features">Features</a> • 
   <a href="#-reference">Reference</a> • 
   <a href="#-customize">Customize</a> • 
-  <a href="https://placekit.io/developers">Documentation</a> • 
   <a href="#%EF%B8%8F-license">License</a>
 </p>
 
@@ -124,9 +123,8 @@ PlaceKit Autocomplete initialization function returns a PlaceKit Autocomplete cl
 
 ```js
 const pka = placekitAutocomplete('<your-api-key>', {
-  language: 'fr',
-  maxResults: 10,
   countries: ['fr'],
+  maxResults: 10,
 });
 ```
 
@@ -163,10 +161,34 @@ console.log(pka.options); // { "target": <input ... />, "language": "en", "maxRe
 | `maxResults` | JS client | `integer` | `5` | Number of results per page. |
 | `language` | JS client | `string?` | `undefined` | Language of the results, two-letter ISO language code. |
 | `types` | JS client | `string[]?` | `undefined` | Type of results to show. Array of accepted values: `street`, `city`, `country`, `airport`, `bus`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all. |
-| `countries` | JS client | `string[]?` | `undefined` | Limit results to given countries. Array of two-letter ISO country codes. |
+| [`countries`](#%EF%B8%8F-countries-option-is-required) | `string[]?` | `undefined` | Countries to search in, or fallback to if `countryByIP` is `true`. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes in the [supported list of countries](#supported-countries). |
+| [`countryByIP`](#countryByIP-option) | `boolean?` | `undefined` | Use IP to find user's country (turned off). |
+| `forwardIP` | `string?` | `undefined` | Set `x-forwarded-for` header to forward the provided IP for back-end usages (otherwise it'll use the server IP). |
 | `coordinates` | JS client | `string?` | `undefined` | Coordinates to search around. Automatically set when calling [`pka.requestGeolocation()`](#pkarequestGeolocation). |
 
-**Important**: the `countries` option is **required** at search time, but we like to keep it optional across all methods so developers remain free on when and how to define it.
+#### ⚠️ `countries` option is required
+
+The `countries` option is **required** at search time, but we like to keep it optional across all methods so developers remain free on when and how to define it: 
+- either when instanciating with `placekit()`,
+- with `pk.configure()`,
+- or at search time with `pk.search()`.
+
+If `countries` is missing or invalid, you'll get a `422` error.
+
+#### Supported countries
+
+Supported countries are `be`, `ca`, `ch`, `de`, `es`, `fr`, `gb`, `it`, `nl`, `pt`, `us`.
+
+#### `countryByIP` option
+
+Set `countryByIP` to `true` when you don't know which country users will search addresses in. In that case, the option `countries` will be used as a fallback if the user's country is not supported:
+
+```js
+pk.search('123 ave', {
+  countryByIP: true, // use user's country, based on their IP
+  countries: ['fr', 'be'], // returning results from France and Belgium if user's country is not supported
+});
+```
 
 ### `pka.configure()`
 
