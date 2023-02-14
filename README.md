@@ -27,7 +27,7 @@ PlaceKit Autocomplete JavaScript Library is a standalone address autocomplete fi
 
 If you already use a components library with an autocomplete field, or need a more advanced usage, please refer to our [PlaceKit JS client](https://github.com/placekit/client-js) reference and its [examples](https://github.com/placekit/client-js/tree/main/examples).
 
-For React implementations, check our [PlaceKit Autocomplete React](https://github.com/placekit/autocomplete-react) library.
+For React implementations, check our [PlaceKit Autocomplete React](https://github.com/placekit/autocomplete-react) library. And for Vue implementations, check our [Vue.js example](./examples/autocomplete-js-vue/).
 
 ## ✨ Features
 

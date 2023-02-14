@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "start": "parcel src/index.html"
+  },
+  "dependencies": {
+    "@parcel/transformer-vue": "^2.8.3",
+    "@placekit/autocomplete-js": "^1.0.0-alpha.10",
+    "parcel": "^2.8.3",
+    "vue": "^3.2.47"
+  }
+}
