@@ -162,11 +162,13 @@ console.log(pka.options); // { "target": <input ... />, "language": "en", "maxRe
 | `flip` | AutoComplete | `boolean` | `false` | Flip position top when overflowing. |
 | `className` | AutoComplete | `string` | `undefined` | Additional suggestions panel CSS class(es). |
 | `maxResults` | JS client | `integer` | `5` | Number of results per page. |
-| `language` | JS client | `string?` | `undefined` | Language of the results, two-letter ISO language code. |
+| `language` | `string?` | `undefined` | Preferred language for the results<sup>[(1)](#ft1)</sup>, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. Supported languages are `en` and `fr`. Defaults to the country's language. |
 | `types` | JS client | `string[]?` | `undefined` | Type of results to show. Array of accepted values: `street`, `city`, `country`, `airport`, `bus`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all. |
-| [`countries`](#%EF%B8%8F-countries-option-is-required) | `string[]?` | `undefined` | Countries to search in, or fallback to if `countryByIP` is `true`. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes in the [supported list of countries](#supported-countries). |
+| [`countries`](#%EF%B8%8F-countries-option-is-required) | `string[]?` | `undefined` | Countries to search in, or fallback to if `countryByIP` is `true`. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes<sup>[(1)](#ft1)</sup>. |
 | [`countryByIP`](#countryByIP-option) | `boolean?` | `undefined` | Use IP to find user's country (turned off). |
 | `coordinates` | JS client | `string?` | `undefined` | Coordinates to search around. Automatically set when calling [`pka.requestGeolocation()`](#pkarequestGeolocation). |
+
+<a id="ft1"><b>[1]</b></a>: See [Scope and Limitations](https://placekit.io/terms/scope) for more details.
 
 #### ⚠️ `countries` option is required
 
@@ -175,11 +177,7 @@ The `countries` option is **required** at search time, but we like to keep it op
 - with `pk.configure()`,
 - or at search time with `pk.search()`.
 
-If `countries` is missing or invalid, you'll get a `422` error.
-
-#### Supported countries
-
-Supported countries are `be`, `ca`, `ch`, `de`, `es`, `fr`, `gb`, `it`, `nl`, `pt`, `us`.
+If `countries` is missing or invalid, you'll get a `422` error, excepted when`types` option is set to `['country']` only.
 
 #### `countryByIP` option
 
