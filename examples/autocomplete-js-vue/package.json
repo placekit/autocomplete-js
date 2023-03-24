@@ -4,7 +4,7 @@
   },
   "dependencies": {
     "@parcel/transformer-vue": "^2.8.3",
-    "@placekit/autocomplete-js": "^1.0.0-alpha.10",
+    "@placekit/autocomplete-js": "^1.0.0",
     "parcel": "^2.8.3",
     "vue": "^3.2.47"
   }
