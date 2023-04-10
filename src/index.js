@@ -109,7 +109,7 @@ module.exports = (apiKey, options = {}) => {
     noResults: `
       <span class="pka-suggestions-item-icon"><span class="pka-sr-only">no results</span></span>
       <span class="pka-suggestions-item-label">
-        <span class="pka-suggestions-item-label-name">No results.</span>
+        <span class="pka-suggestions-item-label-name">No results</span>
       </span>
     `,
     strategy: 'absolute',
