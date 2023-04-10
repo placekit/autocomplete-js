@@ -44,7 +44,7 @@ For React implementations, check our [PlaceKit Autocomplete React](https://githu
 First, import the library and the default stylesheet into the `<head>` tag in your HTML:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.0.0/dist/placekit-autocomplete.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.1.0/dist/placekit-autocomplete.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js"></script>
 ```
 
@@ -65,7 +65,7 @@ Or if you are using native ES Modules:
 
 ```html
 <script type="module">
-  import placekit from 'https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.0.0/dist/placekit-autocomplete.esm.js';
+  import placekit from 'https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.1.0/dist/placekit-autocomplete.esm.js';
   const pka = placekitAutocomplete(/* ... */);
   // ...
 </script>
@@ -156,8 +156,9 @@ console.log(pka.options); // { "target": <input ... />, "language": "en", "maxRe
 | --- | --- | --- | --- | --- |
 | `target` | AutoComplete | `string\|Element` | `-` | Target input element or (unique) selector. |
 | `offset` | AutoComplete | `integer` | `4` | Gap between input and suggestions list in pixels. |
-| `template` | AutoComplete | `(item: object) => string` | [see index.js](./src/index.js#L24-L39) | Suggestion item formatting function. |
-| `formatValue` | AutoComplete | `(item: object) => string` | [see index.js](./src/index.js#L40) | Input value formatting function when selected from list. |
+| `template` | AutoComplete | `(item: object) => string` | [see index.js](./src/index.js#L92-L107) | Suggestion item formatting function. |
+| `formatValue` | AutoComplete | `(item: object) => string` | [see index.js](./src/index.js#L108) | Input value formatting function when selected from list. |
+| `noResults` | AutoComplete | `string` | [see index.js](./src/index.js#L109-L114) | No result template. |
 | `strategy` | AutoComplete | `'absolute' | 'fixed'` | `absolute` | [Popper positioning strategy](https://popper.js.org/docs/v2/constructors/#strategy) |
 | `flip` | AutoComplete | `boolean` | `false` | Flip position top when overflowing. |
 | `className` | AutoComplete | `string` | `undefined` | Additional suggestions panel CSS class(es). |
