@@ -53,7 +53,7 @@ require('./placekit.css');
  * @prop {number} [offset] Suggestions panel vertical offset (in px)
  * @prop {Template} [template] Suggestion item template
  * @prop {FormatValue} [formatValue] Return value formatting function
- * @prop {string} [noResult] No result template
+ * @prop {string} [noResults] No results template
  * @prop {'absolute'|'fixed'} [strategy] Popper positionning strategy (see https://popper.js.org/docs/v2/constructors/#strategy)
  * @prop {boolean} [flip] Flip when overflowing (defaults to false)
  * @prop {string} [className] Additional panel class name
@@ -81,7 +81,7 @@ module.exports = (apiKey, options = {}) => {
     offset,
     template,
     formatValue,
-    noResult,
+    noResults,
     strategy,
     flip,
     className,
@@ -106,10 +106,10 @@ module.exports = (apiKey, options = {}) => {
       `;
     },
     formatValue: (item) => item.name,
-    noResult: `
-      <span class="pka-suggestions-item-icon"><span class="pka-sr-only">no result</span></span>
+    noResults: `
+      <span class="pka-suggestions-item-icon"><span class="pka-sr-only">no results</span></span>
       <span class="pka-suggestions-item-label">
-        <span class="pka-suggestions-item-label-name">No result.</span>
+        <span class="pka-suggestions-item-label-name">No results.</span>
       </span>
     `,
     strategy: 'absolute',
@@ -252,12 +252,12 @@ module.exports = (apiKey, options = {}) => {
     } else {
       const element = document.createElement('div');
       element.classList.add('pka-suggestions-item');
-      element.classList.add(`pka-type-no-result`);
+      element.classList.add(`pka-type-no-results`);
       element.setAttribute('role', 'option');
       element.setAttribute('tabindex', -1);
       element.setAttribute('aria-selected', false);
       element.setAttribute('aria-disabled', true);
-      element.innerHTML = noResult;
+      element.innerHTML = noResults;
       suggestionsList.appendChild(element);
     }
     popperInstance.update();
