@@ -244,13 +244,13 @@ body[data-theme="dark"] .pka-suggestions {
   position: relative;
   display: flex;
   align-items: center;
-  gap: .5em;
-  padding: .375em .5em;
+  gap: .625em;
+  padding: .375em .625em;
 }
 
 @media (min-width: 360px) {
   .pka-suggestions-item {
-    padding: .625em .5em;
+    padding: .625em;
   }
 }
 
@@ -275,9 +275,17 @@ body[data-theme="dark"] .pka-suggestions {
   color: rgba(var(--pka-color-black));
 }
 
+.pka-suggestions-item[aria-disabled="true"] .pka-suggestions-item-label-name {
+  color: rgba(var(--pka-color-darker));
+}
+
 body.dark .pka-suggestions-item-label-name,
 body[data-theme="dark"] .pka-suggestions-item-label-name {
   color: rgb(var(--pka-color-white));
+}
+body.dark .pka-suggestions-item[aria-disabled="true"] .pka-suggestions-item-label-name,
+body[data-theme="dark"] .pka-suggestions-item[aria-disabled="true"] .pka-suggestions-item-label-name {
+  color: rgb(var(--pka-color-light));
 }
 
 .pka-suggestions-item-label-name mark {
@@ -348,6 +356,9 @@ body[data-theme="dark"] .pka-suggestions-item-label-name {
 }
 .pka-suggestions-item.pka-type-tourism .pka-suggestions-item-icon {
   mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='m13.15 34.85 14.5-7.15 7.15-14.5-14.5 7.15ZM24 26q-.85 0-1.425-.575Q22 24.85 22 24q0-.85.575-1.425Q23.15 22 24 22q.85 0 1.425.575Q26 23.15 26 24q0 .85-.575 1.425Q24.85 26 24 26Zm0 18q-4.1 0-7.75-1.575-3.65-1.575-6.375-4.3-2.725-2.725-4.3-6.375Q4 28.1 4 24q0-4.15 1.575-7.8 1.575-3.65 4.3-6.35 2.725-2.7 6.375-4.275Q19.9 4 24 4q4.15 0 7.8 1.575 3.65 1.575 6.35 4.275 2.7 2.7 4.275 6.35Q44 19.85 44 24q0 4.1-1.575 7.75-1.575 3.65-4.275 6.375t-6.35 4.3Q28.15 44 24 44Zm0-3q7.1 0 12.05-4.975Q41 31.05 41 24q0-7.1-4.95-12.05Q31.1 7 24 7q-7.05 0-12.025 4.95Q7 16.9 7 24q0 7.05 4.975 12.025Q16.95 41 24 41Zm0-17Z'/%3E%3C/svg%3E");
+}
+.pka-suggestions-item.pka-type-no-result .pka-suggestions-item-icon {
+  mask-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='m33.94 15.6 4.2-4.2 4.2 4.2 2.33-2.35-4.2-4.2 4.2-4.2-2.33-2.32-4.2 4.2-4.2-4.2-2.34 2.32 4.2 4.2-4.2 4.2 2.34 2.34ZM24 23.56c.98 0 1.82-.35 2.52-1.05.7-.7 1.05-1.54 1.05-2.52s-.35-1.82-1.05-2.52A3.44 3.44 0 0 0 24 16.43c-.98 0-1.82.35-2.52 1.05-.7.7-1.05 1.54-1.05 2.52s.35 1.82 1.05 2.52c.7.7 1.54 1.05 2.52 1.05Zm0 20.7c-5.43-4.63-9.49-8.92-12.17-12.88-2.69-3.96-4.03-7.63-4.03-11 0-5.05 1.63-9.09 4.88-12.09a16.2 16.2 0 0 1 12.93-4.43c.52.05 1.04.13 1.57.22V7.6A11.7 11.7 0 0 0 24 7.2c-3.59 0-6.62 1.24-9.1 3.7-2.46 2.47-3.7 5.63-3.7 9.5 0 2.46 1.07 5.3 3.2 8.54 2.14 3.24 5.34 6.85 9.6 10.83 4.3-3.92 7.49-7.48 9.57-10.68 2.09-3.2 3.16-6.02 3.2-8.46a12.6 12.6 0 0 0-.1-1.55h3.47c.03.25.05.51.05.77v.78c-.05 3.34-1.42 6.97-4.1 10.89-2.69 3.92-6.72 8.17-12.09 12.74'/%3E%3C/svg%3E");
 }
 
 /* suggestion active/selected overrides

@@ -156,8 +156,9 @@ console.log(pka.options); // { "target": <input ... />, "language": "en", "maxRe
 | --- | --- | --- | --- | --- |
 | `target` | AutoComplete | `string\|Element` | `-` | Target input element or (unique) selector. |
 | `offset` | AutoComplete | `integer` | `4` | Gap between input and suggestions list in pixels. |
-| `template` | AutoComplete | `(item: object) => string` | [see index.js](./src/index.js#L24-L39) | Suggestion item formatting function. |
-| `formatValue` | AutoComplete | `(item: object) => string` | [see index.js](./src/index.js#L40) | Input value formatting function when selected from list. |
+| `template` | AutoComplete | `(item: object) => string` | [see index.js](./src/index.js#L92-L107) | Suggestion item formatting function. |
+| `formatValue` | AutoComplete | `(item: object) => string` | [see index.js](./src/index.js#L108) | Input value formatting function when selected from list. |
+| `noResult` | AutoComplete | `string` | [see index.js](./src/index.js#L109-L114) | No result template. |
 | `strategy` | AutoComplete | `'absolute' | 'fixed'` | `absolute` | [Popper positioning strategy](https://popper.js.org/docs/v2/constructors/#strategy) |
 | `flip` | AutoComplete | `boolean` | `false` | Flip position top when overflowing. |
 | `className` | AutoComplete | `string` | `undefined` | Additional suggestions panel CSS class(es). |

@@ -53,6 +53,7 @@ require('./placekit.css');
  * @prop {number} [offset] Suggestions panel vertical offset (in px)
  * @prop {Template} [template] Suggestion item template
  * @prop {FormatValue} [formatValue] Return value formatting function
+ * @prop {string} [noResult] No result template
  * @prop {'absolute'|'fixed'} [strategy] Popper positionning strategy (see https://popper.js.org/docs/v2/constructors/#strategy)
  * @prop {boolean} [flip] Flip when overflowing (defaults to false)
  * @prop {string} [className] Additional panel class name
@@ -80,6 +81,7 @@ module.exports = (apiKey, options = {}) => {
     offset,
     template,
     formatValue,
+    noResult,
     strategy,
     flip,
     className,
@@ -104,6 +106,12 @@ module.exports = (apiKey, options = {}) => {
       `;
     },
     formatValue: (item) => item.name,
+    noResult: `
+      <span class="pka-suggestions-item-icon"><span class="pka-sr-only">no result</span></span>
+      <span class="pka-suggestions-item-label">
+        <span class="pka-suggestions-item-label-name">No result.</span>
+      </span>
+    `,
     strategy: 'absolute',
     flip: false,
     ...options,
@@ -203,11 +211,10 @@ module.exports = (apiKey, options = {}) => {
   // open/close the suggestions panel
   const togglePanel = (open = true) => {
     const prevIsOpen = suggestionsPanel.classList.contains('pka-open');
-    suggestionsPanel.classList.toggle('pka-open', open && suggestions.length > 0);
-    const isOpen = suggestionsPanel.classList.contains('pka-open');
-    input.setAttribute('aria-expanded', isOpen);
-    if (prevIsOpen !== isOpen) {
-      fireEvent(isOpen ? 'open' : 'close');
+    suggestionsPanel.classList.toggle('pka-open', open);
+    input.setAttribute('aria-expanded', open);
+    if (prevIsOpen !== open) {
+      fireEvent(open ? 'open' : 'close');
     }
   };
 
@@ -225,7 +232,6 @@ module.exports = (apiKey, options = {}) => {
       const element = document.createElement('div');
       element.classList.add('pka-suggestions-item');
       element.classList.add(`pka-type-${item.type}`);
-      element.classList.add(`pka-type-${item.type}`);
       element.setAttribute('role', 'option');
       element.setAttribute('tabindex', -1);
       element.setAttribute('aria-selected', false);
@@ -241,7 +247,19 @@ module.exports = (apiKey, options = {}) => {
         item,
       });
     }
-    suggestions[0]?.element.classList.add('pka-active');
+    if (suggestions.length) {
+      suggestions[0].element.classList.add('pka-active');
+    } else {
+      const element = document.createElement('div');
+      element.classList.add('pka-suggestions-item');
+      element.classList.add(`pka-type-no-result`);
+      element.setAttribute('role', 'option');
+      element.setAttribute('tabindex', -1);
+      element.setAttribute('aria-selected', false);
+      element.setAttribute('aria-disabled', true);
+      element.innerHTML = noResult;
+      suggestionsList.appendChild(element);
+    }
     popperInstance.update();
     togglePanel(!!query || pk.hasGeolocation);
     fireEvent('results', query, items);
