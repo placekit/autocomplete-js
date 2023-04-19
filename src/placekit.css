@@ -23,6 +23,7 @@
   --pka-color-white: 255, 255, 255;
   --pka-border-radius: 6px;
   --pka-font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --pka-z-index: 9999;
 }
 
 /* dark mode overrides */
@@ -197,7 +198,9 @@ body[data-theme="dark"] .pka-input-clear:hover {
  * ----------------------------------------
  */
 .pka-suggestions {
-  z-index: 9999;
+  container-name: pka-suggestions;
+  container-type: inline-size;
+  z-index: var(--pka-z-index);
   visibility: hidden;
   pointer-events: none;
   overflow: hidden;
@@ -248,7 +251,7 @@ body[data-theme="dark"] .pka-suggestions {
   padding: .375em .625em;
 }
 
-@media (min-width: 360px) {
+@container pka-suggestions (min-width: 420px) {
   .pka-suggestions-item {
     padding: .625em;
   }
@@ -301,7 +304,7 @@ body[data-theme="dark"] .pka-suggestions-item[aria-disabled="true"] .pka-suggest
   font-size: .75em;
 }
 
-@media (min-width: 360px) {
+@container pka-suggestions (min-width: 420px) {
   .pka-suggestions-item-label {
     text-overflow: ellipsis;
     white-space: nowrap;
