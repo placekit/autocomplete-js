@@ -198,6 +198,8 @@ body[data-theme="dark"] .pka-input-clear:hover {
  * ----------------------------------------
  */
 .pka-suggestions {
+  container-name: pka-suggestions;
+  container-type: inline-size;
   z-index: var(--pka-z-index);
   visibility: hidden;
   pointer-events: none;
@@ -249,7 +251,7 @@ body[data-theme="dark"] .pka-suggestions {
   padding: .375em .625em;
 }
 
-@media (min-width: 360px) {
+@container pka-suggestions (min-width: 420px) {
   .pka-suggestions-item {
     padding: .625em;
   }
@@ -302,7 +304,7 @@ body[data-theme="dark"] .pka-suggestions-item[aria-disabled="true"] .pka-suggest
   font-size: .75em;
 }
 
-@media (min-width: 360px) {
+@container pka-suggestions (min-width: 420px) {
   .pka-suggestions-item-label {
     text-overflow: ellipsis;
     white-space: nowrap;
