@@ -23,6 +23,7 @@
   --pka-color-white: 255, 255, 255;
   --pka-border-radius: 6px;
   --pka-font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --pka-z-index: 9999;
 }
 
 /* dark mode overrides */
@@ -197,7 +198,7 @@ body[data-theme="dark"] .pka-input-clear:hover {
  * ----------------------------------------
  */
 .pka-suggestions {
-  z-index: 9999;
+  z-index: var(--pka-z-index);
   visibility: hidden;
   pointer-events: none;
   overflow: hidden;
