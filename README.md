@@ -392,6 +392,7 @@ Colors, border-radius, font and overall scale (in `rem`) are accessible over var
   --pka-color-white: 255, 255, 255;
   --pka-border-radius: 6px;
   --pka-font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --pka-z-index: 9999;
 }
 
 /* dark mode overrides */
