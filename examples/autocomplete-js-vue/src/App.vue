@@ -42,7 +42,7 @@ export default {
     };
   },
   mounted() {
-    this.client = placekitAutocomplete(process.env.PLACEKIT_API_KEY, {
+    this.client = placekitAutocomplete(import.meta.env.VITE_PLACEKIT_API_KEY, {
       target: this.$refs.input,
       countries: ['fr'],
     })

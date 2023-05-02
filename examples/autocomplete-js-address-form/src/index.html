@@ -2,10 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PlaceKit Autocomplete</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.1.1/dist/placekit-autocomplete.min.css" />
-  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <meta name="viewport" content="width=device-width" />
+  <title>PlaceKit Autocomplete JS Address Form</title>
 </head>
 <body class="bg-gray-50 px-4 py-8 lg:p-16">
   <form id="form" class="max-w-xl mx-auto grid sm:grid-cols-3 gap-6 p-6 rounded-lg bg-white shadow-lg">
@@ -53,21 +51,6 @@
     </div>
   </form>
 
-  <script src="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js"></script>
-  <script>
-    // instantiate PlaceKit Autocomplete JS
-    const pka = placekitAutocomplete('<your-api-key>', {
-      target: '#placekit-input',
-      countries: ['fr'],
-    });
-
-    // inject values when user picks an address
-    const form = document.querySelector('#form');
-    pka.on('pick', (value, item) => {
-      for (const name of ['city', 'zipcode', 'country']) {
-        form.querySelector(`input[name="${name}"]`).value = item[name];
-      }
-    });
-  </script>
+  <script type="module" src="main.js"></script>
 </body>
 </html>

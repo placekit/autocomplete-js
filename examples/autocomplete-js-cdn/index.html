@@ -2,18 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PlaceKit Autocomplete</title>
+  <meta name="viewport" content="width=device-width" />
+  <title>PlaceKit Autocomplete JS from CDN</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.1.1/dist/placekit-autocomplete.min.css" />
+  <style>
+    body { padding: 4rem; }
+    .container {
+      max-width: 600px;
+      margin: auto;
+    }
+    .pka-input {
+      width: 100%;
+    }
+  </style>
 </head>
 <body>
-  <input
-    type="search"
-    name="place"
-    placeholder="Search place..."
-    class="pka-input"
-    id="placekit-input"
-  />
+  <main class="container">
+    <input
+      type="search"
+      name="place"
+      placeholder="Search place..."
+      class="pka-input"
+      id="placekit-input"
+    />
+  </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js"></script>
   <script>
