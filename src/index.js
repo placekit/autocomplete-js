@@ -35,6 +35,11 @@ require('./placekit.css');
  */
 
 /**
+ * @callback NoResults
+ * @return {string}
+ */
+
+/**
  * @typedef {Object} PKOptions PlaceKit parameters
  * @prop {number} [timeout] Timeout in ms
  * @prop {number} [maxResults] Max results to return
@@ -53,7 +58,7 @@ require('./placekit.css');
  * @prop {number} [offset] Suggestions panel vertical offset (in px)
  * @prop {Template} [template] Suggestion item template
  * @prop {FormatValue} [formatValue] Return value formatting function
- * @prop {string} [noResults] No results template
+ * @prop {string|NoResults} [noResults] No results template
  * @prop {'absolute'|'fixed'} [strategy] Popper positionning strategy (see https://popper.js.org/docs/v2/constructors/#strategy)
  * @prop {boolean} [flip] Flip when overflowing (defaults to false)
  * @prop {string} [className] Additional panel class name
@@ -123,6 +128,10 @@ module.exports = (apiKey, options = {}) => {
   }
 
   if (!formatValue?.call) {
+    throw (`TypeError: options.formatValue must be a function returning a string.`);
+  }
+
+  if (typeof noResults !== 'string' && !noResults?.call) {
     throw (`TypeError: options.formatValue must be a function returning a string.`);
   }
 
