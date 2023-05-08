@@ -36,6 +36,7 @@ require('./placekit.css');
 
 /**
  * @callback NoResults
+ * @param {string} query Input value
  * @return {string}
  */
 
@@ -111,10 +112,10 @@ module.exports = (apiKey, options = {}) => {
       `;
     },
     formatValue: (item) => item.name,
-    noResults: `
+    noResults: (query) => `
       <span class="pka-suggestions-item-icon"><span class="pka-sr-only">no results</span></span>
       <span class="pka-suggestions-item-label">
-        <span class="pka-suggestions-item-label-name">No results</span>
+        <span class="pka-suggestions-item-label-name">No results for ${query}</span>
       </span>
     `,
     strategy: 'absolute',
@@ -132,7 +133,7 @@ module.exports = (apiKey, options = {}) => {
   }
 
   if (typeof noResults !== 'string' && !noResults?.call) {
-    throw (`TypeError: options.formatValue must be a function returning a string.`);
+    throw (`TypeError: options.noResults must be a function returning a string.`);
   }
 
   const input = typeof target === 'string' ? document.querySelector(target) : target;
@@ -266,7 +267,7 @@ module.exports = (apiKey, options = {}) => {
       element.setAttribute('tabindex', -1);
       element.setAttribute('aria-selected', false);
       element.setAttribute('aria-disabled', true);
-      element.innerHTML = noResults;
+      element.innerHTML = noResults?.call ? noResults(query) : noResults;
       suggestionsList.appendChild(element);
     }
     popperInstance.update();
