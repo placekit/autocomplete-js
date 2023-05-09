@@ -281,6 +281,9 @@ module.exports = (apiKey, options = {}) => {
     clearActive();
     const current = Math.max(0, Math.min(suggestions.length - 1, prev + n));
     suggestions[current].element.classList.add('pka-active');
+    suggestionsList.scrollTo({
+      top: suggestions[current].element.offsetTop,
+    });
     if (prev + n < 0) {
       togglePanel(false);
     }
@@ -360,6 +363,11 @@ module.exports = (apiKey, options = {}) => {
         case 'Enter':
           if (isPanelOpen) {
             e.preventDefault();
+            applySelection();
+          }
+          break;
+        case 'ArrowRight':
+          if (isPanelOpen && input.selectionEnd === input.value.length) {
             applySelection();
           }
           break;
