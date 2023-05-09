@@ -158,7 +158,7 @@ console.log(pka.options); // { "target": <input ... />, "language": "en", "maxRe
 | `offset` | AutoComplete | `integer` | `4` | Gap between input and suggestions list in pixels. |
 | `template` | AutoComplete | `(item: object) => string` | [see index.js](./src/index.js#L92-L107) | Suggestion item formatting function. |
 | `formatValue` | AutoComplete | `(item: object) => string` | [see index.js](./src/index.js#L108) | Input value formatting function when selected from list. |
-| `noResults` | AutoComplete | `string` | [see index.js](./src/index.js#L109-L114) | No result template. |
+| `noResults` | AutoComplete | `string\|(query: string) => string` | [see index.js](./src/index.js#L109-L114) | No result template. |
 | `strategy` | AutoComplete | `'absolute' | 'fixed'` | `absolute` | [Popper positioning strategy](https://popper.js.org/docs/v2/constructors/#strategy) |
 | `flip` | AutoComplete | `boolean` | `false` | Flip position top when overflowing. |
 | `className` | AutoComplete | `string` | `undefined` | Additional suggestions panel CSS class(es). |

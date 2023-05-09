@@ -35,6 +35,12 @@ require('./placekit.css');
  */
 
 /**
+ * @callback NoResults
+ * @param {string} query Input value
+ * @return {string}
+ */
+
+/**
  * @typedef {Object} PKOptions PlaceKit parameters
  * @prop {number} [timeout] Timeout in ms
  * @prop {number} [maxResults] Max results to return
@@ -53,7 +59,7 @@ require('./placekit.css');
  * @prop {number} [offset] Suggestions panel vertical offset (in px)
  * @prop {Template} [template] Suggestion item template
  * @prop {FormatValue} [formatValue] Return value formatting function
- * @prop {string} [noResults] No results template
+ * @prop {string|NoResults} [noResults] No results template
  * @prop {'absolute'|'fixed'} [strategy] Popper positionning strategy (see https://popper.js.org/docs/v2/constructors/#strategy)
  * @prop {boolean} [flip] Flip when overflowing (defaults to false)
  * @prop {string} [className] Additional panel class name
@@ -106,10 +112,10 @@ module.exports = (apiKey, options = {}) => {
       `;
     },
     formatValue: (item) => item.name,
-    noResults: `
+    noResults: (query) => `
       <span class="pka-suggestions-item-icon"><span class="pka-sr-only">no results</span></span>
       <span class="pka-suggestions-item-label">
-        <span class="pka-suggestions-item-label-name">No results</span>
+        <span class="pka-suggestions-item-label-name">No results for ${query}</span>
       </span>
     `,
     strategy: 'absolute',
@@ -124,6 +130,10 @@ module.exports = (apiKey, options = {}) => {
 
   if (!formatValue?.call) {
     throw (`TypeError: options.formatValue must be a function returning a string.`);
+  }
+
+  if (typeof noResults !== 'string' && !noResults?.call) {
+    throw (`TypeError: options.noResults must be a function returning a string.`);
   }
 
   const input = typeof target === 'string' ? document.querySelector(target) : target;
@@ -257,7 +267,7 @@ module.exports = (apiKey, options = {}) => {
       element.setAttribute('tabindex', -1);
       element.setAttribute('aria-selected', false);
       element.setAttribute('aria-disabled', true);
-      element.innerHTML = noResults;
+      element.innerHTML = noResults?.call ? noResults(query) : noResults;
       suggestionsList.appendChild(element);
     }
     popperInstance.update();
