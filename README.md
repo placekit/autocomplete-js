@@ -36,6 +36,7 @@ For React implementations, check our [PlaceKit Autocomplete React](https://githu
 - **Non-invasive**: use and style your own input element
 - **Customizable** and **extensible** with events and hooks
 - **TypeScript** compatible
+- [**W3C WAI compliant**](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)
 
 ## 🎯 Quick start
 
