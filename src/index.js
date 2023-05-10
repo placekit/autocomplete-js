@@ -298,17 +298,19 @@ module.exports = (apiKey, options = {}) => {
       suggestionsList.scrollTo({
         top: current.element.offsetTop,
       });
-      input.value = formatValue(current.item).trim();
+      input.value = formatValue(current.item).trim(); // inject selected value in input for preview
     }
   };
 
   // inject selected suggestion into input
+  // - on action button click: just preview
+  // - on "enter" or item click: apply value
   const applySelection = (index, pick = false) => {
     if (typeof index === 'undefined') {
       index = suggestions.findIndex(({ element }) => element.classList.contains('pka-active'));
     }
-    if (index > -1 && index in suggestions) {
-      const current = suggestions[index];
+    const current = suggestions[index];
+    if (current) {
       suggestions.forEach(({ element }) => {
         element.classList.remove('pka-selected');
         element.setAttribute('aria-selected', false);
@@ -329,9 +331,7 @@ module.exports = (apiKey, options = {}) => {
         togglePanel(false);
         fireEvent('pick', input.value, current.item, index);
       }
-      return true;
     }
-    return false;
   };
 
   // Event handlers
@@ -390,10 +390,8 @@ module.exports = (apiKey, options = {}) => {
         case 'Enter':
           if (isPanelOpen) {
             e.preventDefault();
-            const isApplied = applySelection(undefined, true);
-            if (!isApplied) {
-              togglePanel(false);
-            }
+            applySelection(undefined, true);
+            togglePanel(false);
           }
           break;
         case 'ArrowRight':
