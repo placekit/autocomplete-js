@@ -206,6 +206,7 @@ module.exports = (apiKey, options = {}) => {
 
   // States
   // ----------------------------------------
+  let userValue = '';
   let isEmpty = true;
   let isFreeForm = true;
   let suggestions = [];
@@ -225,13 +226,12 @@ module.exports = (apiKey, options = {}) => {
     suggestionsPanel.classList.toggle('pka-open', open);
     input.setAttribute('aria-expanded', open);
     if (prevIsOpen !== open) {
+      if (!open) {
+        clearActive();
+        userValue = input.value;
+      }
       fireEvent(open ? 'open' : 'close');
     }
-  };
-
-  // clear active (hover/keyboard-selected) suggestions
-  const clearActive = () => {
-    suggestions.forEach(({ element }) => element.classList.remove('pka-active'));
   };
 
   // update suggestions list with API response
@@ -279,15 +279,27 @@ module.exports = (apiKey, options = {}) => {
     fireEvent('results', query, items);
   };
 
+  // clear active (hover/keyboard-selected) suggestions
+  const clearActive = () => {
+    suggestions.forEach(({ element }) => element.classList.remove('pka-active'));
+  };
+
   // move cursor (keyboard nav)
   const moveSelection = (n) => {
     const prev = suggestions.findIndex(({ element }) => element.classList.contains('pka-active'));
     clearActive();
-    const current = (prev + n + suggestions.length) % suggestions.length;
-    suggestions[current].element.classList.add('pka-active');
-    suggestionsList.scrollTo({
-      top: suggestions[current].element.offsetTop,
-    });
+    const steps = suggestions.length + 1; // cycle through user value + suggestions
+    const pos = (prev + 1 + n + steps) % steps;
+    if (pos === 0) {
+      input.value = userValue;
+    } else {
+      const current = suggestions[pos - 1];
+      current.element.classList.add('pka-active');
+      suggestionsList.scrollTo({
+        top: current.element.offsetTop,
+      });
+      input.value = formatValue(current.item).trim();
+    }
   };
 
   // inject selected suggestion into input
@@ -317,7 +329,9 @@ module.exports = (apiKey, options = {}) => {
         togglePanel(false);
         fireEvent('pick', input.value, current.item, index);
       }
+      return true;
     }
+    return false;
   };
 
   // Event handlers
@@ -327,6 +341,7 @@ module.exports = (apiKey, options = {}) => {
     pk.search(input.value)
       .then(({ results }) => updateSuggestions(input.value.trim(), results))
       .catch((err) => fireEvent('error', err));
+    userValue = input.value;
     isEmpty = !input.value;
     isFreeForm = true;
     fireEvent('empty', isEmpty);
@@ -375,7 +390,10 @@ module.exports = (apiKey, options = {}) => {
         case 'Enter':
           if (isPanelOpen) {
             e.preventDefault();
-            applySelection(undefined, true);
+            const isApplied = applySelection(undefined, true);
+            if (!isApplied) {
+              togglePanel(false);
+            }
           }
           break;
         case 'ArrowRight':
@@ -402,8 +420,8 @@ module.exports = (apiKey, options = {}) => {
     e.stopPropagation();
     const index = suggestions.findIndex(({ element }) => element.contains(e.target));
     if (index > -1) {
-      const tapAhead = e.target.classList.contains('pka-suggestions-item-action');
-      applySelection(index, !tapAhead);
+      const fromAction = e.target.classList.contains('pka-suggestions-item-action');
+      applySelection(index, !fromAction);
     }
   };
 
