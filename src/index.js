@@ -109,6 +109,7 @@ module.exports = (apiKey, options = {}) => {
           <span class="pka-suggestions-item-label-name">${item.highlight}</span>
           <span class="pka-suggestions-item-label-sub">${sub}</span>
         </span>
+        <button class="pka-suggestions-item-action" />
       `;
     },
     formatValue: (item) => item.name,
@@ -250,6 +251,11 @@ module.exports = (apiKey, options = {}) => {
         clearActive();
         element.classList.add('pka-active');
       });
+      const action = element.querySelector('pka-suggestions-item-action');
+      if (action) {
+        action.setAttribute('tabindex', -1);
+        action.addEventListener('click', onPick);
+      }
       suggestionsList.appendChild(element);
       // push both DOM element and result JSON
       suggestions.push({
@@ -257,9 +263,7 @@ module.exports = (apiKey, options = {}) => {
         item,
       });
     }
-    if (suggestions.length) {
-      suggestions[0].element.classList.add('pka-active');
-    } else {
+    if (!suggestions.length) {
       const element = document.createElement('div');
       element.classList.add('pka-suggestions-item');
       element.classList.add(`pka-type-no-results`);
@@ -277,40 +281,42 @@ module.exports = (apiKey, options = {}) => {
 
   // move cursor (keyboard nav)
   const moveSelection = (n) => {
-    const prev = Math.max(0, suggestions.findIndex(({ element }) => element.classList.contains('pka-active')));
+    const prev = suggestions.findIndex(({ element }) => element.classList.contains('pka-active'));
     clearActive();
-    const current = Math.max(0, Math.min(suggestions.length - 1, prev + n));
+    const current = (prev + n + suggestions.length) % suggestions.length;
     suggestions[current].element.classList.add('pka-active');
     suggestionsList.scrollTo({
       top: suggestions[current].element.offsetTop,
     });
-    if (prev + n < 0) {
-      togglePanel(false);
-    }
   };
 
   // inject selected suggestion into input
-  const applySelection = (index) => {
+  const applySelection = (index, pick = false) => {
     if (typeof index === 'undefined') {
-      index = Math.max(0, suggestions.findIndex(({ element }) => element.classList.contains('pka-active')));
+      index = suggestions.findIndex(({ element }) => element.classList.contains('pka-active'));
     }
-    const current = suggestions[index];
-    if (current) {
+    if (index > -1 && index in suggestions) {
+      const current = suggestions[index];
       suggestions.forEach(({ element }) => {
         element.classList.remove('pka-selected');
         element.setAttribute('aria-selected', false);
       });
-      current.element.classList.add('pka-selected');
-      current.element.setAttribute('aria-selected', true);
       input.value = formatValue(current.item).trim();
+      if (!pick) {
+        input.value += ' '; // add space to let user continue typing
+      }
       input.dispatchEvent(new Event('change'));
       input.focus();
-      togglePanel(false);
       isEmpty = false;
       isFreeForm = false;
       fireEvent('empty', false);
       fireEvent('freeForm', false);
-      fireEvent('pick', input.value, current.item, index);
+      if (pick) {
+        current.element.classList.add('pka-selected');
+        current.element.setAttribute('aria-selected', true);
+        togglePanel(false);
+        fireEvent('pick', input.value, current.item, index);
+      }
     }
   };
 
@@ -348,14 +354,20 @@ module.exports = (apiKey, options = {}) => {
         case 'ArrowUp':
           if (isPanelOpen) {
             e.preventDefault();
-            moveSelection(-1);
+            if (e.altKey) {
+              togglePanel(false);
+            } else {
+              moveSelection(-1);
+            }
           }
           break;
         case 'Down':
         case 'ArrowDown':
           if (isPanelOpen) {
             e.preventDefault();
-            moveSelection(1);
+            if (!e.altKey) {
+              moveSelection(1);
+            }
           } else {
             togglePanel(true);
           }
@@ -363,7 +375,7 @@ module.exports = (apiKey, options = {}) => {
         case 'Enter':
           if (isPanelOpen) {
             e.preventDefault();
-            applySelection();
+            applySelection(undefined, true);
           }
           break;
         case 'ArrowRight':
@@ -387,9 +399,11 @@ module.exports = (apiKey, options = {}) => {
 
   // click on a suggestion to inject its value into the input
   const onPick = (e) => {
+    e.stopPropagation();
     const index = suggestions.findIndex(({ element }) => element.contains(e.target));
     if (index > -1) {
-      applySelection(index);
+      const tapAhead = e.target.classList.contains('pka-suggestions-item-action');
+      applySelection(index, !tapAhead);
     }
   };
 

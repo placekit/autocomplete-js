@@ -36,6 +36,7 @@ For React implementations, check our [PlaceKit Autocomplete React](https://githu
 - **Non-invasive**: use and style your own input element
 - **Customizable** and **extensible** with events and hooks
 - **TypeScript** compatible
+- [**W3C WAI compliant**](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)
 
 ## 🎯 Quick start
 
@@ -44,7 +45,7 @@ For React implementations, check our [PlaceKit Autocomplete React](https://githu
 First, import the library and the default stylesheet into the `<head>` tag in your HTML:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.1.3/dist/placekit-autocomplete.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.1.4/dist/placekit-autocomplete.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js"></script>
 ```
 
@@ -65,7 +66,7 @@ Or if you are using native ES Modules:
 
 ```html
 <script type="module">
-  import placekit from 'https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.1.3/dist/placekit-autocomplete.esm.js';
+  import placekit from 'https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.1.4/dist/placekit-autocomplete.esm.js';
   const pka = placekitAutocomplete(/* ... */);
   // ...
 </script>
