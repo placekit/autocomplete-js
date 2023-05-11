@@ -1,7 +1,14 @@
 const placekit = require('@placekit/client-js');
 const { createPopper } = require('@popperjs/core');
 
-require('./placekit.css');
+require('./placekit.css'); // removed at build time
+
+/**
+ * Check if value is string
+ * @arg {string} v Value to test
+ * @return {bool}
+ */
+const isString = (v) => Object.prototype.toString.call(v) === '[object String]';
 
 /** @external Position built-in Geolocation position type */
 
@@ -133,11 +140,11 @@ module.exports = (apiKey, options = {}) => {
     throw (`TypeError: options.formatValue must be a function returning a string.`);
   }
 
-  if (typeof noResults !== 'string' && !noResults?.call) {
+  if (!isString(noResults) && !noResults?.call) {
     throw (`TypeError: options.noResults must be a function returning a string.`);
   }
 
-  const input = typeof target === 'string' ? document.querySelector(target) : target;
+  const input = isString(target) ? document.querySelector(target) : target;
   if (!input) {
     throw (`Error: target not found.`);
   } else if (input.tagName !== 'INPUT' || !['text', 'search'].includes(input.getAttribute('type'))) {
@@ -156,7 +163,7 @@ module.exports = (apiKey, options = {}) => {
   // suggestions panel
   const suggestionsPanel = document.createElement('div');
   suggestionsPanel.classList.add('pka-suggestions');
-  if (typeof className === 'string') {
+  if (isString(className)) {
     suggestionsPanel.classList.add(...className.split(/\s+/));
   }
 
@@ -239,6 +246,31 @@ module.exports = (apiKey, options = {}) => {
     }
   };
 
+  // backup user value to restore it on cancel
+  const storeValue = () => {
+    userValue = input.value;
+  };
+
+  // restore backed-up user value
+  const restoreValue = () => {
+    input.value = userValue;
+  };
+
+  // manually set input value
+  const setValue = (value, preview = false) => {
+    if (isString(value)) {
+      input.value = value;
+      if (!preview) {
+        input.dispatchEvent(new Event('change'));
+        storeValue();
+        setEmpty(!input.value);
+      }
+      input.focus();
+      return true;
+    }
+    return false;
+  };
+
   // open/close the suggestions panel
   const togglePanel = (open = true) => {
     const prevIsOpen = suggestionsPanel.classList.contains('pka-open');
@@ -275,10 +307,11 @@ module.exports = (apiKey, options = {}) => {
         action.addEventListener('click', onPick);
       }
       suggestionsList.appendChild(element);
-      // push both DOM element and result JSON
+      // push both DOM element, JSON result and computed value
       suggestions.push({
         element,
         item,
+        value: formatValue(item).trim(),
       });
     }
     if (!suggestions.length) {
@@ -302,28 +335,26 @@ module.exports = (apiKey, options = {}) => {
     suggestions.forEach(({ element }) => element.classList.remove('pka-active'));
   };
 
-  // move cursor (keyboard nav)
-  const moveSelection = (n) => {
+  // move active suggestion cursor (keyboard nav) and preview value
+  const moveActive = (n) => {
     const prev = suggestions.findIndex(({ element }) => element.classList.contains('pka-active'));
     clearActive();
     const steps = suggestions.length + 1; // cycle through user value + suggestions
     const pos = (prev + 1 + n + steps) % steps;
     if (pos === 0) {
-      input.value = userValue;
+      restoreValue();
     } else {
       const current = suggestions[pos - 1];
       current.element.classList.add('pka-active');
       suggestionsList.scrollTo({
         top: current.element.offsetTop,
       });
-      input.value = formatValue(current.item).trim(); // inject selected value in input for preview
+      setValue(current.value, true);
     }
   };
 
-  // inject selected suggestion into input
-  // - on action button click: just preview
-  // - on "enter" or item click: apply value
-  const applySelection = (index, pick = false) => {
+  // inject active suggestion into input
+  const applySuggestion = (index) => {
     if (typeof index === 'undefined') {
       index = suggestions.findIndex(({ element }) => element.classList.contains('pka-active'));
     }
@@ -333,21 +364,11 @@ module.exports = (apiKey, options = {}) => {
         element.classList.remove('pka-selected');
         element.setAttribute('aria-selected', false);
       });
-      input.value = formatValue(current.item).trim();
-      if (!pick) {
-        input.value += ' '; // add space to let user continue typing
-      }
-      input.dispatchEvent(new Event('change'));
-      input.focus();
-      userValue = input.value;
-      setEmpty(false);
-      setFreeForm(!pick);
-      if (pick) {
-        current.element.classList.add('pka-selected');
-        current.element.setAttribute('aria-selected', true);
-        togglePanel(false);
-        fireEvent('pick', input.value, current.item, index);
-      }
+      current.element.classList.add('pka-selected');
+      current.element.setAttribute('aria-selected', true);
+      setValue(current.value);
+      setFreeForm(false);
+      fireEvent('pick', input.value, current.item, index);
     }
   };
 
@@ -358,7 +379,7 @@ module.exports = (apiKey, options = {}) => {
     pk.search(input.value)
       .then(({ results }) => updateSuggestions(input.value.trim(), results))
       .catch((err) => fireEvent('error', err));
-    userValue = input.value;
+    storeValue();
     setEmpty(!input.value);
     setFreeForm(true);
   };
@@ -371,8 +392,8 @@ module.exports = (apiKey, options = {}) => {
   // close panel on click outside
   const onClickOutside = (e) => {
     if (![input, suggestionsPanel].includes(e.target) && !suggestionsPanel.contains(e.target)) {
+      restoreValue();
       togglePanel(false);
-      input.value = userValue;
     }
   };
 
@@ -388,39 +409,33 @@ module.exports = (apiKey, options = {}) => {
             if (e.altKey) {
               togglePanel(false);
             } else {
-              moveSelection(-1);
+              moveActive(-1);
             }
           }
           break;
         case 'Down':
         case 'ArrowDown':
-          if (isPanelOpen) {
+          if (!isPanelOpen) {
             e.preventDefault();
-            if (!e.altKey) {
-              moveSelection(1);
-            }
-          } else {
             togglePanel(true);
+          } else if (!e.altKey) {
+            e.preventDefault();
+            moveActive(1);
           }
           break;
         case 'Enter':
           if (isPanelOpen) {
             e.preventDefault();
-            applySelection(undefined, true);
+            applySuggestion();
             togglePanel(false);
-          }
-          break;
-        case 'ArrowRight':
-          if (isPanelOpen && input.selectionEnd === input.value.length) {
-            applySelection();
           }
           break;
         case 'Esc':
         case 'Escape':
           if (isPanelOpen) {
             e.preventDefault();
+            restoreValue();
             togglePanel(false);
-            input.value = userValue;
           }
           break;
         case 'Tab':
@@ -431,14 +446,19 @@ module.exports = (apiKey, options = {}) => {
   };
 
   // click on a suggestion to inject its value into the input
+  // "action button" only previews the value
   const onPick = (e) => {
     e.stopPropagation();
     const index = suggestions.findIndex(({ element }) => element.contains(e.target));
     if (index > -1) {
-      const fromAction = e.target.classList.contains('pka-suggestions-item-action');
-      applySelection(index, !fromAction);
-      if (fromAction) {
-        userValue = input.value;
+      if (e.target.classList.contains('pka-suggestions-item-action')) {
+        const current = suggestions[index];
+        if (current) {
+          setValue(`${current.value} `); // add trailing space
+        }
+      } else {
+        applySuggestion(index);
+        togglePanel(false);
       }
     }
   };
@@ -552,7 +572,7 @@ module.exports = (apiKey, options = {}) => {
    * @return {client}
    */
   client.on = (event, handler) => {
-    if (typeof event !== 'string') {
+    if (!isString(event)) {
       throw (`Error: first argument 'event' must be a string.`);
     }
     if (typeof handler !== 'undefined' && !handler.call) {
