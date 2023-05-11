@@ -218,7 +218,6 @@ module.exports = (apiKey, options = {}) => {
   // ----------------------------------------
   // fire registered event handler
   const fireEvent = (event, ...args) => {
-    console.log(event, args);
     if (handlers[event]?.call) {
       handlers[event].apply(client, args);
     }
