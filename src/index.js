@@ -109,7 +109,7 @@ module.exports = (apiKey, options = {}) => {
           <span class="pka-suggestions-item-label-name">${item.highlight}</span>
           <span class="pka-suggestions-item-label-sub">${sub}</span>
         </span>
-        <button class="pka-suggestions-item-action" />
+        <button type="button" class="pka-suggestions-item-action" />
       `;
     },
     formatValue: (item) => item.name,
@@ -206,17 +206,37 @@ module.exports = (apiKey, options = {}) => {
 
   // States
   // ----------------------------------------
+  // internal
   let userValue = '';
+  let suggestions = [];
+
+  // external
   let isEmpty = true;
   let isFreeForm = true;
-  let suggestions = [];
 
   // Utility functions
   // ----------------------------------------
   // fire registered event handler
   const fireEvent = (event, ...args) => {
+    console.log(event, args);
     if (handlers[event]?.call) {
       handlers[event].apply(client, args);
+    }
+  };
+
+  // set isEmpty and fire event only if value changes
+  const setEmpty = (bool) => {
+    if (bool !== isEmpty) {
+      isEmpty = bool;
+      fireEvent('empty', bool);
+    }
+  };
+
+  // set isFreeForm and fire event only if value changes
+  const setFreeForm = (bool) => {
+    if (bool !== isFreeForm) {
+      isFreeForm = bool;
+      fireEvent('freeForm', bool);
     }
   };
 
@@ -321,10 +341,8 @@ module.exports = (apiKey, options = {}) => {
       }
       input.dispatchEvent(new Event('change'));
       input.focus();
-      isEmpty = false;
-      isFreeForm = false;
-      fireEvent('empty', false);
-      fireEvent('freeForm', false);
+      setEmpty(false);
+      setFreeForm(!pick);
       if (pick) {
         current.element.classList.add('pka-selected');
         current.element.setAttribute('aria-selected', true);
@@ -342,10 +360,8 @@ module.exports = (apiKey, options = {}) => {
       .then(({ results }) => updateSuggestions(input.value.trim(), results))
       .catch((err) => fireEvent('error', err));
     userValue = input.value;
-    isEmpty = !input.value;
-    isFreeForm = true;
-    fireEvent('empty', isEmpty);
-    fireEvent('freeForm', true);
+    setEmpty(!input.value);
+    setFreeForm(true);
   };
 
   // open panel on input focus
