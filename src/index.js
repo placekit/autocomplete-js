@@ -247,7 +247,6 @@ module.exports = (apiKey, options = {}) => {
     if (prevIsOpen !== open) {
       if (!open) {
         clearActive();
-        userValue = input.value;
       }
       fireEvent(open ? 'open' : 'close');
     }
@@ -340,6 +339,7 @@ module.exports = (apiKey, options = {}) => {
       }
       input.dispatchEvent(new Event('change'));
       input.focus();
+      userValue = input.value;
       setEmpty(false);
       setFreeForm(!pick);
       if (pick) {
@@ -372,6 +372,7 @@ module.exports = (apiKey, options = {}) => {
   const onClickOutside = (e) => {
     if (![input, suggestionsPanel].includes(e.target) && !suggestionsPanel.contains(e.target)) {
       togglePanel(false);
+      input.value = userValue;
     }
   };
 
@@ -419,6 +420,7 @@ module.exports = (apiKey, options = {}) => {
           if (isPanelOpen) {
             e.preventDefault();
             togglePanel(false);
+            input.value = userValue;
           }
           break;
         case 'Tab':
@@ -435,6 +437,9 @@ module.exports = (apiKey, options = {}) => {
     if (index > -1) {
       const fromAction = e.target.classList.contains('pka-suggestions-item-action');
       applySelection(index, !fromAction);
+      if (fromAction) {
+        userValue = input.value;
+      }
     }
   };
 
