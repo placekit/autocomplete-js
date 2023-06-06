@@ -13,7 +13,7 @@
     "vite": "^4.3.2"
   },
   "dependencies": {
-    "@placekit/autocomplete-js": "^1.2.1",
+    "@placekit/autocomplete-js": "^1.2.2",
     "leaflet": "^1.9.3"
   }
 }
