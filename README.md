@@ -46,7 +46,7 @@ First, import the library and the default stylesheet into the `<head>` tag in yo
 
 ```html
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.1.5/dist/placekit-autocomplete.min.css" />
-<script src="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.1.5"></script>
 ```
 
 After importing the library, `placekitAutocomplete` becomes available as a global:
@@ -109,10 +109,9 @@ If you have trouble importing CSS from `node_modules`, copy/paste [its content](
 - [`pka.input`](#pkainput)
 - [`pka.options`](#pkaoptions)
 - [`pka.configure()`](#pkaconfigure)
+- [`pka.state`](#pkastate)
 - [`pka.on()`](#pkaon)
 - [`pka.handlers`](#pkahandlers)
-- [`pka.isEmpty`](#pkaisEmpty)
-- [`pka.isFreeForm`](#pkaisFreeForm)
 - [`pka.requestGeolocation()`](#pkarequestGeolocation)
 - [`pka.hasGeolocation`](#pkahasGeolocation)
 - [`pka.open()`](#pkaopen)
@@ -207,6 +206,25 @@ pka.configure({
 | --- | --- | --- |
 | `opts` | `key-value mapping` (optional) | Global parameters (see [options](#pkaoptions)) |
 
+### `pka.state`
+
+Read-only object of input state.
+
+```js
+console.log(pka.state); // {dirty: false, empty: false, freeForm: true}
+
+// `true` after the user modifies the input value.
+console.log(pka.state.dirty); // true or false
+
+// `true` whenever the input value is not empty.
+console.log(pka.state.empty); // true or false
+
+// `true` if the input has a free form value or `false` if value is selected from the suggestions.
+console.log(pka.state.freeForm); // true or false
+```
+
+The `freeForm` value comes handy if you need to implement a strict validation of the address, but we don't interfere with how to implement it as input validation is always very specific to the project's stack.
+
 ### `pka.on()`
 
 Register event handlers, methods can be chained.
@@ -217,8 +235,10 @@ pka.on('open', () => {})
   .on('results', (query, results) => {})
   .on('pick', (value, item, index) => {})
   .on('error', (error) => {})
-  .on('empty', (isEmpty) => {})
-  .on('freeForm', (isFreeForm) => {})
+  .on('dirty', (dirty) => {})
+  .on('empty', (empty) => {})
+  .on('freeForm', (freeForm) => {})
+  .on('state', (state) => {})
   .on('geolocation', (hasGeolocation, position) => {});
 ```
 
@@ -266,13 +286,21 @@ Triggered on server error.
 | --- | --- | --- |
 | `error` | `object` | Error details. |
 
+##### `dirty`
+
+Triggered when the input value changes.
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `dirty` | `boolean` | `true` after the user modifies the value. |
+
 ##### `empty`
 
 Triggered when input value changes.
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `isEmpty` | `boolean` | `true` if input is empty. |
+| `empty` | `boolean` | `true` if input is empty. |
 
 ##### `freeForm`
 
@@ -280,7 +308,15 @@ Triggered when input value changes.
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `isFreeForm` | `boolean` | `true` on user input, `false` on `pick` event. |
+| `freeForm` | `boolean` | `true` on user input, `false` on `pick` event. |
+
+##### `state`
+
+Triggered when one of the input states changes.
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `state` | `object` | The current input state. |
 
 ##### `geolocation`
 
@@ -299,25 +335,6 @@ Reads registered event handlers, read-only.
 pka.on('open', () => {});
 console.log(pka.handlers); // { open: ... }
 ```
-
-### `pka.isEmpty`
-
-Read-only boolean, `true` if the input is empty.
-
-```js
-console.log(pka.isEmpty); // true or false
-```
-
-### `pka.isFreeForm`
-
-Read-only boolean, `true` if the input has a free form value or `false` if value is selected from the suggestions.
-The latter can only occur when the user has clicked on a suggestion or pressed ENTER after navigating the suggestions with the keyboard.
-
-```js
-console.log(pka.isFreeForm); // true or false
-```
-
-This value comes handy if you need to implement a strict validation of the address, but we don't interfere with how to implement it as input validation is always very specific to the project's stack.
 
 ### `pka.requestGeolocation()`
 

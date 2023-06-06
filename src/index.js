@@ -5,10 +5,17 @@ require('./placekit.css'); // removed at build time
 
 /**
  * Check if value is string
- * @arg {string} v Value to test
+ * @arg {*} v Value to test
  * @return {bool}
  */
 const isString = (v) => Object.prototype.toString.call(v) === '[object String]';
+
+/**
+ * Check if value is object
+ * @arg {*} v Value to test
+ * @return {bool}
+ */
+const isObject = (v) => typeof v === 'object' && !Array.isArray(v) && v !== null;
 
 /** @external Position built-in Geolocation position type */
 
@@ -217,62 +224,72 @@ module.exports = (apiKey, options = {}) => {
   let userValue = '';
   let suggestions = [];
 
-  // external
-  let isEmpty = true;
-  let isFreeForm = true;
+  /**
+   * @typedef {Object} State Client external state
+   * @prop {bool} dirty has the input value been modified
+   * @prop {bool} empty is the input value empty
+   * @prop {bool} freeForm is the input value set manually (false if picked from the suggestions list)
+   */
+  const state = {
+    empty: !input.value,
+    dirty: false,
+    freeForm: true,
+  };
 
   // Utility functions
   // ----------------------------------------
   // fire registered event handler
-  const fireEvent = (event, ...args) => {
+  function fireEvent(event, ...args) {
     if (handlers[event]?.call) {
       handlers[event].apply(client, args);
     }
-  };
+  }
 
-  // set isEmpty and fire event only if value changes
-  const setEmpty = (bool) => {
-    if (bool !== isEmpty) {
-      isEmpty = bool;
-      fireEvent('empty', bool);
+  // set state value and fire event only if it changes
+  function setState(partial) {
+    if (!isObject(partial)) {
+      throw (`TypeError: setState first argument must be a key/value object.`);
     }
-  };
-
-  // set isFreeForm and fire event only if value changes
-  const setFreeForm = (bool) => {
-    if (bool !== isFreeForm) {
-      isFreeForm = bool;
-      fireEvent('freeForm', bool);
+    let update = false;
+    for (const k in state) {
+      if (k in partial && partial[k] !== state[k]) {
+        state[k] = partial[k];
+        fireEvent(k, state[k]);
+        update = true;
+      }
     }
-  };
+    if (update) {
+      fireEvent('state', state);
+    }
+  }
 
   // backup user value to restore it on cancel
-  const storeValue = () => {
+  function storeValue() {
     userValue = input.value;
-  };
+  }
 
   // restore backed-up user value
-  const restoreValue = () => {
+  function restoreValue() {
     input.value = userValue;
-  };
+  }
 
   // manually set input value
-  const setValue = (value, preview = false) => {
+  function setValue(value, preview = false) {
     if (isString(value)) {
       input.value = value;
       if (!preview) {
         input.dispatchEvent(new Event('change'));
         storeValue();
-        setEmpty(!input.value);
+        setState({ empty: !input.value });
       }
       input.focus();
       return true;
     }
     return false;
-  };
+  }
 
   // open/close the suggestions panel
-  const togglePanel = (open = true) => {
+  function togglePanel(open = true) {
     const prevIsOpen = suggestionsPanel.classList.contains('pka-open');
     suggestionsPanel.classList.toggle('pka-open', open);
     input.setAttribute('aria-expanded', open);
@@ -282,10 +299,10 @@ module.exports = (apiKey, options = {}) => {
       }
       fireEvent(open ? 'open' : 'close');
     }
-  };
+  }
 
   // update suggestions list with API response
-  const updateSuggestions = (query, items) => {
+  function updateSuggestions(query, items) {
     suggestionsList.innerHTML = '';
     suggestions = [];
     for (let i = 0, l = items.length; i<l; i++) {
@@ -328,15 +345,15 @@ module.exports = (apiKey, options = {}) => {
     popperInstance.update();
     togglePanel(!!query || pk.hasGeolocation);
     fireEvent('results', query, items);
-  };
+  }
 
   // clear active (hover/keyboard-selected) suggestions
-  const clearActive = () => {
+  function clearActive() {
     suggestions.forEach(({ element }) => element.classList.remove('pka-active'));
-  };
+  }
 
   // move active suggestion cursor (keyboard nav) and preview value
-  const moveActive = (n) => {
+  function moveActive(n) {
     const prev = suggestions.findIndex(({ element }) => element.classList.contains('pka-active'));
     clearActive();
     const steps = suggestions.length + 1; // cycle through user value + suggestions
@@ -351,10 +368,10 @@ module.exports = (apiKey, options = {}) => {
       });
       setValue(current.value, true);
     }
-  };
+  }
 
   // inject active suggestion into input
-  const applySuggestion = (index) => {
+  function applySuggestion(index) {
     if (typeof index === 'undefined') {
       index = suggestions.findIndex(({ element }) => element.classList.contains('pka-active'));
     }
@@ -367,38 +384,45 @@ module.exports = (apiKey, options = {}) => {
       current.element.classList.add('pka-selected');
       current.element.setAttribute('aria-selected', true);
       setValue(current.value);
-      setFreeForm(false);
+      setState({ freeForm: false });
       fireEvent('pick', input.value, current.item, index);
     }
-  };
+  }
 
   // Event handlers
   // ----------------------------------------
   // update suggestions as user types
-  const onInput = () => {
+  function onInput() {
     pk.search(input.value)
       .then(({ results }) => updateSuggestions(input.value.trim(), results))
       .catch((err) => fireEvent('error', err));
     storeValue();
-    setEmpty(!input.value);
-    setFreeForm(true);
-  };
+    setState({
+      dirty: true,
+      empty: !input.value.trim(),
+      freeForm: true,
+    });
+  }
 
   // open panel on input focus
-  const onFocus = () => {
-    togglePanel(!!input.value.trim());
-  };
+  function onFocus() {
+    if (!state.dirty && !!input.value) {
+      onInput();
+    } else {
+      togglePanel(!!input.value.trim() || suggestions.length > 0);
+    }
+  }
 
   // close panel on click outside
-  const onClickOutside = (e) => {
+  function onClickOutside(e) {
     if (![input, suggestionsPanel].includes(e.target) && !suggestionsPanel.contains(e.target)) {
       restoreValue();
       togglePanel(false);
     }
-  };
+  }
 
   // keyboard navigation
-  const onKeyNav = (e) => {
+  function onKeyNav(e) {
     if (input === document.activeElement && !!input.value.trim()) {
       const isPanelOpen = suggestionsPanel.classList.contains('pka-open');
       switch (e.key) {
@@ -443,11 +467,11 @@ module.exports = (apiKey, options = {}) => {
           break;
       }
     }
-  };
+  }
 
   // click on a suggestion to inject its value into the input
   // "action button" only previews the value
-  const onPick = (e) => {
+  function onPick(e) {
     e.stopPropagation();
     const index = suggestions.findIndex(({ element }) => element.contains(e.target));
     if (index > -1) {
@@ -461,15 +485,15 @@ module.exports = (apiKey, options = {}) => {
         togglePanel(false);
       }
     }
-  };
+  }
 
   // update suggestions panel size on window resize
-  const onResize = () => {
+  function onResize() {
     window.requestAnimationFrame(() => {
       suggestionsPanel.style.width = `${input.offsetWidth}px`;
       popperInstance.update();
     });
-  };
+  }
 
   // Bind events
   // ----------------------------------------
@@ -520,24 +544,13 @@ module.exports = (apiKey, options = {}) => {
   });
 
   /**
-   * Make `client.isEmpty` read-only
-   * @member {boolean}
+   * Make `client.state` read-only
+   * @member {State}
    * @memberof client
    * @readonly
    */
-  Object.defineProperty(client, 'isEmpty', {
-    get: () => isEmpty,
-  });
-
-  /**
-   * Make `client.isFreeForm` read-only
-   * @desc Enable devs to handle strict address validation
-   * @member {boolean}
-   * @memberof client
-   * @readonly
-   */
-  Object.defineProperty(client, 'isFreeForm', {
-    get: () => isFreeForm,
+  Object.defineProperty(client, 'state', {
+    get: () => state,
   });
 
   /**
@@ -551,7 +564,7 @@ module.exports = (apiKey, options = {}) => {
   });
 
   /**
-   * Open suggestions panel
+   * Clear input value
    * @memberof client
    * @return {client}
    */
