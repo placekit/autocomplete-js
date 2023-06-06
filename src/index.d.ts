@@ -20,8 +20,10 @@ export interface PKAClient {
   on(event: 'results', handler?: PKAHandlers['results']): PKAClient;
   on(event: 'pick', handler?: PKAHandlers['pick']): PKAClient;
   on(event: 'error', handler?: PKAHandlers['error']): PKAClient;
+  on(event: 'dirty', handler?: PKAHandlers['dirty']): PKAClient;
   on(event: 'empty', handler?: PKAHandlers['empty']): PKAClient;
   on(event: 'freeForm', handler?: PKAHandlers['freeForm']): PKAClient;
+  on(event: 'state', handler?: PKAHandlers['state']): PKAClient;
   on(event: 'geolocation', handler?: PKAHandlers['geolocation']): PKAClient;
   readonly handlers: Partial<PKAHandlers>;
   readonly state: PKAState;
