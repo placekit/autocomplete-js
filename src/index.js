@@ -286,20 +286,19 @@ module.exports = (apiKey, options = {}) => {
 
   /**
    * Manually set input value
-   * @arg {string} value New input value
+   * @arg {string} [value] New input value
    * @arg {bool} [preview=false] `true` to trigger change event
    */
   function setValue(value, preview = false) {
     if (isString(value)) {
-      throw (`TypeError: setValue first argument must be a string.`);
+      input.value = value;
+      if (!preview) {
+        input.dispatchEvent(new Event('change'));
+        storeValue();
+        setState({ empty: !input.value });
+      }
+      input.focus();
     }
-    input.value = value;
-    if (!preview) {
-      input.dispatchEvent(new Event('change'));
-      storeValue();
-      setState({ empty: !input.value });
-    }
-    input.focus();
   }
 
   /**
@@ -442,7 +441,7 @@ module.exports = (apiKey, options = {}) => {
     if (!state.dirty && !!input.value) {
       onInput();
     } else {
-      togglePanel(!!input.value.trim() || suggestions.length > 0);
+      togglePanel(!!input.value.trim());
     }
   }
 
