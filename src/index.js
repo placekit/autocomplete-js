@@ -238,14 +238,21 @@ module.exports = (apiKey, options = {}) => {
 
   // Utility functions
   // ----------------------------------------
-  // fire registered event handler
+  /**
+   * Fire registered event handler
+   * @arg {string} event Event name
+   * @arg {...*} args Event arguments
+   */
   function fireEvent(event, ...args) {
     if (handlers[event]?.call) {
       handlers[event].apply(client, args);
     }
   }
 
-  // set state value and fire event only if it changes
+  /**
+   * Set state value and fire event only if it changes
+   * @arg {Partial<State>} partial Partial key/val state object
+   */
   function setState(partial) {
     if (!isObject(partial)) {
       throw (`TypeError: setState first argument must be a key/value object.`);
@@ -263,32 +270,42 @@ module.exports = (apiKey, options = {}) => {
     }
   }
 
-  // backup user value to restore it on cancel
+  /**
+   * Backup user value to restore it on cancel
+   */
   function storeValue() {
     userValue = input.value;
   }
 
-  // restore backed-up user value
+  /**
+   * Restore backed-up user value
+   */
   function restoreValue() {
     input.value = userValue;
   }
 
-  // manually set input value
+  /**
+   * Manually set input value
+   * @arg {string} value New input value
+   * @arg {bool} [preview=false] `true` to trigger change event
+   */
   function setValue(value, preview = false) {
     if (isString(value)) {
-      input.value = value;
-      if (!preview) {
-        input.dispatchEvent(new Event('change'));
-        storeValue();
-        setState({ empty: !input.value });
-      }
-      input.focus();
-      return true;
+      throw (`TypeError: setValue first argument must be a string.`);
     }
-    return false;
+    input.value = value;
+    if (!preview) {
+      input.dispatchEvent(new Event('change'));
+      storeValue();
+      setState({ empty: !input.value });
+    }
+    input.focus();
   }
 
-  // open/close the suggestions panel
+  /**
+   * Open/close the suggestions panel
+   * @arg {boolean} [open=true] `true` to open, `false` to close
+   */
   function togglePanel(open = true) {
     const prevIsOpen = suggestionsPanel.classList.contains('pka-open');
     suggestionsPanel.classList.toggle('pka-open', open);
@@ -301,7 +318,11 @@ module.exports = (apiKey, options = {}) => {
     }
   }
 
-  // update suggestions list with API response
+  /**
+   * Update suggestions list with API response
+   * @arg {string} query Query
+   * @arg {Result[]} items Results
+   */
   function updateSuggestions(query, items) {
     suggestionsList.innerHTML = '';
     suggestions = [];
@@ -347,17 +368,22 @@ module.exports = (apiKey, options = {}) => {
     fireEvent('results', query, items);
   }
 
-  // clear active (hover/keyboard-selected) suggestions
+  /**
+   * Clear active (hover/keyboard-selected) suggestions
+   */
   function clearActive() {
     suggestions.forEach(({ element }) => element.classList.remove('pka-active'));
   }
 
-  // move active suggestion cursor (keyboard nav) and preview value
-  function moveActive(n) {
+  /**
+   * Move active suggestion cursor (keyboard nav) and preview value
+   * @arg {number} index Index of the suggestion to move cursor to
+   */
+  function moveActive(index) {
     const prev = suggestions.findIndex(({ element }) => element.classList.contains('pka-active'));
     clearActive();
     const steps = suggestions.length + 1; // cycle through user value + suggestions
-    const pos = (prev + 1 + n + steps) % steps;
+    const pos = (prev + 1 + index + steps) % steps;
     if (pos === 0) {
       restoreValue();
     } else {
@@ -370,7 +396,10 @@ module.exports = (apiKey, options = {}) => {
     }
   }
 
-  // inject active suggestion into input
+  /**
+   * Inject active suggestion into input
+   * @arg {number} index Index of the suggestion to apply
+   */
   function applySuggestion(index) {
     if (typeof index === 'undefined') {
       index = suggestions.findIndex(({ element }) => element.classList.contains('pka-active'));
@@ -391,7 +420,9 @@ module.exports = (apiKey, options = {}) => {
 
   // Event handlers
   // ----------------------------------------
-  // update suggestions as user types
+  /**
+   * Update suggestions as user types
+   */
   function onInput() {
     pk.search(input.value)
       .then(({ results }) => updateSuggestions(input.value.trim(), results))
@@ -404,7 +435,9 @@ module.exports = (apiKey, options = {}) => {
     });
   }
 
-  // open panel on input focus
+  /**
+   * Open panel on input focus
+   */
   function onFocus() {
     if (!state.dirty && !!input.value) {
       onInput();
@@ -413,7 +446,10 @@ module.exports = (apiKey, options = {}) => {
     }
   }
 
-  // close panel on click outside
+  /**
+   * Close panel on click outside
+   * @arg {object} e Click event
+   */
   function onClickOutside(e) {
     if (![input, suggestionsPanel].includes(e.target) && !suggestionsPanel.contains(e.target)) {
       restoreValue();
@@ -421,7 +457,10 @@ module.exports = (apiKey, options = {}) => {
     }
   }
 
-  // keyboard navigation
+  /**
+   * Keyboard navigation
+   * @arg {object} e Keydown event
+   */
   function onKeyNav(e) {
     if (input === document.activeElement && !!input.value.trim()) {
       const isPanelOpen = suggestionsPanel.classList.contains('pka-open');
@@ -469,8 +508,11 @@ module.exports = (apiKey, options = {}) => {
     }
   }
 
-  // click on a suggestion to inject its value into the input
-  // "action button" only previews the value
+  /**
+   * Click on a suggestion to inject its value into the input
+   * "action button" only previews the value
+   * @arg {object} e Click event
+   */
   function onPick(e) {
     e.stopPropagation();
     const index = suggestions.findIndex(({ element }) => element.contains(e.target));
@@ -487,7 +529,9 @@ module.exports = (apiKey, options = {}) => {
     }
   }
 
-  // update suggestions panel size on window resize
+  /**
+   * Update suggestions panel size on window resize
+   */
   function onResize() {
     window.requestAnimationFrame(() => {
       suggestionsPanel.style.width = `${input.offsetWidth}px`;
