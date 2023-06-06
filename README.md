@@ -45,8 +45,8 @@ For React implementations, check our [PlaceKit Autocomplete React](https://githu
 First, import the library and the default stylesheet into the `<head>` tag in your HTML:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.1.5/dist/placekit-autocomplete.min.css" />
-<script src="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.1.5"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.2.0/dist/placekit-autocomplete.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.2.0"></script>
 ```
 
 After importing the library, `placekitAutocomplete` becomes available as a global:
@@ -159,7 +159,7 @@ console.log(pka.options); // { "target": <input ... />, "language": "en", "maxRe
 | `template` | AutoComplete | `(item: object) => string` | [see index.js](./src/index.js#L92-L107) | Suggestion item formatting function. |
 | `formatValue` | AutoComplete | `(item: object) => string` | [see index.js](./src/index.js#L108) | Input value formatting function when selected from list. |
 | `noResults` | AutoComplete | `string\|(query: string) => string` | [see index.js](./src/index.js#L109-L114) | No result template. |
-| `strategy` | AutoComplete | `'absolute' | 'fixed'` | `absolute` | [Popper positioning strategy](https://popper.js.org/docs/v2/constructors/#strategy) |
+| `strategy` | AutoComplete | `'absolute' \| 'fixed'` | `absolute` | [Popper positioning strategy](https://popper.js.org/docs/v2/constructors/#strategy) |
 | `flip` | AutoComplete | `boolean` | `false` | Flip position top when overflowing. |
 | `className` | AutoComplete | `string` | `undefined` | Additional suggestions panel CSS class(es). |
 | `maxResults` | JS client | `integer` | `5` | Number of results per page. |
