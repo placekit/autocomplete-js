@@ -18,6 +18,7 @@
   <a href="#-features">Features</a> • 
   <a href="#-reference">Reference</a> • 
   <a href="#-customize">Customize</a> • 
+  <a href="#-additional-notes">Additional notes</a> • 
   <a href="#%EF%B8%8F-license">License</a>
 </p>
 
@@ -425,6 +426,9 @@ For advanced customization, refer to our [stylesheet](./src/placekit.css) to lea
 A dark mode is available whenever you add `.dark` class or `data-theme="dark"` attribute to the `<body>` element.
 
 ⚠️ **NOTE:** you are **not** allowed to hide the PlaceKit logo unless we've delivered a special authorization. To request one, please contact us using [our contact form](https://placekit.io/about#contact).
+
+## ⚠️ Additional notes
+- Setting a non-empty `value` attribute on the `<input>` will automatically trigger a first search request when the user focuses the input.
 
 ## ⚖️ License
 
