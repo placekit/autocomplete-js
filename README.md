@@ -18,7 +18,7 @@
   <a href="#-features">Features</a> • 
   <a href="#-reference">Reference</a> • 
   <a href="#-customize">Customize</a> • 
-  <a href="#-additional-notes">Additional notes</a> • 
+  <a href="#%EF%B8%8F-additional-notes">Additional notes</a> • 
   <a href="#%EF%B8%8F-license">License</a>
 </p>
 
