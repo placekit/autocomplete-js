@@ -113,7 +113,7 @@ module.exports = (apiKey, options = {}) => {
     offset: 4,
     template: (item) => {
       const icon = item.type === 'country' ?
-        `<img class="pka-suggestions-item-flag" src="https://flagcdn.com/48x36/${item.countrycode}.webp" alt="${item.countrycode}" />` :
+        `<img class="pka-suggestions-item-flag" src="https://flagcdn.com/${item.countrycode}.svg" alt="${item.countrycode}" />` :
         `<span class="pka-suggestions-item-icon"><span class="pka-sr-only">${item.type}</span></span>`;
       const sub = item.type === 'country' ? '' : [
         (item.type === 'city' ? item.zipcode.sort()[0] : item.city),
