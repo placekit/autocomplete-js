@@ -30,8 +30,8 @@ if (clearButton) {
 }
 
 // hide clear button when input is empty
-pka.on('empty', (isEmpty) => {
+pka.on('empty', (empty) => {
   if (clearButton) {
-    clearButton.setAttribute('aria-hidden', isEmpty ? 'true' : 'false');
+    clearButton.setAttribute('aria-hidden', empty ? 'true' : 'false');
   }
 });
