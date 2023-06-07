@@ -26,6 +26,6 @@ const clearButton = document.querySelector('#placekit-clear');
 clearButton.addEventListener('click', pka.clear);
 
 // hide clear button when input is empty
-pka.on('empty', (isEmpty) => {
-  clearButton.setAttribute('aria-hidden', isEmpty);
+pka.on('empty', (empty) => {
+  clearButton.setAttribute('aria-hidden', empty);
 });

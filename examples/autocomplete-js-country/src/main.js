@@ -6,19 +6,8 @@ import '@placekit/autocomplete-js/dist/placekit-autocomplete.css';
 // instantiate PlaceKit Autocomplete JS
 const pka = placekitAutocomplete(import.meta.env.VITE_PLACEKIT_API_KEY, {
   target: '#placekit-input',
-  countries: ['fr'],
-});
-
-// request geolocation on click
-const geolocationButton = document.querySelector('#placekit-geolocation');
-geolocationButton.addEventListener('click', () => {
-  pka.requestGeolocation().then((pos) => {
-    geolocationButton.classList.add('pka-enabled');
-    geolocationButton.setAttribute('aria-checked', true);
-  }).catch(() => {
-    geolocationButton.classList.remove('pka-enabled');
-    geolocationButton.setAttribute('aria-checked', false);
-  });
+  type: ['country'],
+  countryAutoFill: true,
 });
 
 // clear input on click

@@ -46,8 +46,8 @@ For React implementations, check our [PlaceKit Autocomplete React](https://githu
 First, import the library and the default stylesheet into the `<head>` tag in your HTML:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.2.2/dist/placekit-autocomplete.min.css" />
-<script src="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.2.2"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.3.0/dist/placekit-autocomplete.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.3.0"></script>
 ```
 
 After importing the library, `placekitAutocomplete` becomes available as a global:
@@ -162,12 +162,13 @@ console.log(pka.options); // { "target": <input ... />, "language": "en", "maxRe
 | `noResults` | AutoComplete | `string\|(query: string) => string` | [see index.js](./src/index.js#L109-L114) | No result template. |
 | `strategy` | AutoComplete | `'absolute' \| 'fixed'` | `absolute` | [Popper positioning strategy](https://popper.js.org/docs/v2/constructors/#strategy) |
 | `flip` | AutoComplete | `boolean` | `false` | Flip position top when overflowing. |
+| [`countryAutoFill`](#countryautofill-option) | Autocomplete | `boolean?` | `false` | Autofill current country by IP when `types: ['country']`. |
 | `className` | AutoComplete | `string` | `undefined` | Additional suggestions panel CSS class(es). |
 | `maxResults` | JS client | `integer` | `5` | Number of results per page. |
-| `language` | `string?` | `undefined` | Preferred language for the results<sup>[(1)](#ft1)</sup>, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. Supported languages are `en` and `fr`. Defaults to the country's language. |
+| `language` | JS client | `string?` | `undefined` | Preferred language for the results<sup>[(1)](#ft1)</sup>, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. Supported languages are `en` and `fr`. Defaults to the country's language. |
 | `types` | JS client | `string[]?` | `undefined` | Type of results to show. Array of accepted values: `street`, `city`, `country`, `airport`, `bus`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all. |
-| [`countries`](#%EF%B8%8F-countries-option-is-required) | `string[]?` | `undefined` | Countries to search in, or fallback to if `countryByIP` is `true`. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes<sup>[(1)](#ft1)</sup>. |
-| [`countryByIP`](#countryByIP-option) | `boolean?` | `undefined` | Use IP to find user's country (turned off). |
+| [`countries`](#%EF%B8%8F-countries-option-is-required) | JS client | `string[]?` | `undefined` | Countries to search in, or fallback to if `countryByIP` is `true`. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes<sup>[(1)](#ft1)</sup>. |
+| [`countryByIP`](#countryByIP-option) | JS client | `boolean?` | `undefined` | Use IP to find user's country (turned off). |
 | `coordinates` | JS client | `string?` | `undefined` | Coordinates to search around. Automatically set when calling [`pka.requestGeolocation()`](#pkarequestGeolocation). |
 
 <a id="ft1"><b>[1]</b></a>: See [Scope and Limitations](https://placekit.io/terms/scope) for more details.
@@ -191,6 +192,23 @@ pka.configure({
   countries: ['fr', 'be'], // returning results from France and Belgium if user's country is not supported
 });
 ```
+
+#### `countryAutoFill` option
+
+When making a country-only autocomplete field, this option enhances the experience by automatically filling the input detected with the user's IP.
+It works only when `types` option is set **only** with the `conutry` value:
+
+```js
+const pka = placekitAutocomplete('<your-api-key>', {
+  target: '#placekit',
+  types: ['country'],
+  countryAutoFill: true,
+});
+```
+
+⚠️ **It makes an automatic call to the PlaceKit API and therefore counts as billable usage.**
+
+See our [country field example](./example/autocomplete-js-country).
 
 ### `pka.configure()`
 

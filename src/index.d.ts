@@ -56,5 +56,6 @@ export type PKAOptions = PKOptions & {
   noResults?: string | ((query: string) => string);
   strategy?: 'absolute' | 'fixed';
   flip?: boolean;
+  countryAutoFill?: boolean;
   className?: string;
 };

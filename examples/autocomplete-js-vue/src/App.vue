@@ -15,7 +15,7 @@
       type="button"
       class="pka-input-clear"
       title="Clear value"
-      :aria-hidden="isEmpty"
+      :aria-hidden="state.empty"
       :onClick="client?.clear"
     >
       <span class="pka-sr-only">Clear value</span>
@@ -36,8 +36,7 @@ export default {
   data() {
     return {
       client: {},
-      isEmpty: true,
-      isFreeForm: true,
+      state: {},
       hasGeolocation: false,
     };
   },
@@ -46,12 +45,15 @@ export default {
       target: this.$refs.input,
       countries: ['fr'],
     })
-      .on('empty', (bool) => {
-        this.isEmpty = bool
+      .on('state', (state) => {
+        this.state = { ...state }; // spread to force update state with new value
       })
       .on('geolocation', (bool) => {
         this.hasGeolocation = bool;
       });
+
+    // init state from client
+    this.state = { ...this.client.state }; // spread to force update state with new value
   },
   beforeUnmount() {
     if (this.client?.destroy?.call) {
