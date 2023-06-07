@@ -76,6 +76,7 @@ const isObject = (v) => typeof v === 'object' && !Array.isArray(v) && v !== null
  * @prop {string|NoResults} [noResults] No results template
  * @prop {'absolute'|'fixed'} [strategy] Popper positionning strategy (see https://popper.js.org/docs/v2/constructors/#strategy)
  * @prop {boolean} [flip] Flip when overflowing (defaults to false)
+ * @prop {boolean} [countryAutoFill] Autofill country by IP when `types: ['country']` (defaults to false)
  * @prop {string} [className] Additional panel class name
  */
 
@@ -104,6 +105,7 @@ module.exports = (apiKey, options = {}) => {
     noResults,
     strategy,
     flip,
+    countryAutoFill,
     className,
     ...pkOptions
   } = {
@@ -135,6 +137,7 @@ module.exports = (apiKey, options = {}) => {
     `,
     strategy: 'absolute',
     flip: false,
+    countryAutoFill: false,
     ...options,
   };
 
@@ -287,17 +290,22 @@ module.exports = (apiKey, options = {}) => {
   /**
    * Manually set input value
    * @arg {string} [value] New input value
-   * @arg {bool} [preview=false] `true` to trigger change event
+   * @arg {bool} [preview=false] `true` to prevent change event
    */
-  function setValue(value, preview = false) {
+  function setValue(value, { preview = false, focus = true, freeForm = true }) {
     if (isString(value)) {
       input.value = value;
       if (!preview) {
         input.dispatchEvent(new Event('change'));
         storeValue();
-        setState({ empty: !input.value });
+        setState({
+          empty: !input.value,
+          freeForm,
+        });
       }
-      input.focus();
+      if (focus) {
+        input.focus();
+      }
     }
   }
 
@@ -391,7 +399,7 @@ module.exports = (apiKey, options = {}) => {
       suggestionsList.scrollTo({
         top: current.element.offsetTop,
       });
-      setValue(current.value, true);
+      setValue(current.value, { preview: true });
     }
   }
 
@@ -537,6 +545,26 @@ module.exports = (apiKey, options = {}) => {
       popperInstance.update();
     });
   }
+
+  // First request if `countryAutoFill: true` and `types: ['country']`
+  // ----------------------------------------
+  if (countryAutoFill && pkOptions.types.includes('country') && pkOptions.types.length === 1) {
+    pk.reverse({
+      countryByIP: true,
+      maxResults: 1,
+    }).then(({ results }) => {
+      if (results.length) {
+        const value = formatValue(results[0]);
+        setValue(value, {
+          preview: false,
+          focus: false,
+          freeForm: false,
+        });
+        fireEvent('pick', value, results[0]);
+      }
+    });
+  }
+
 
   // Bind events
   // ----------------------------------------
