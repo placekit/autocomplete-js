@@ -292,7 +292,7 @@ module.exports = (apiKey, options = {}) => {
    * @arg {string} [value] New input value
    * @arg {bool} [preview=false] `true` to prevent change event
    */
-  function setValue(value, { preview = false, focus = true, freeForm = true }) {
+  function setValue(value, { preview = false, focus = true, freeForm = true } = {}) {
     if (isString(value)) {
       input.value = value;
       if (!preview) {
@@ -419,8 +419,7 @@ module.exports = (apiKey, options = {}) => {
       });
       current.element.classList.add('pka-selected');
       current.element.setAttribute('aria-selected', true);
-      setValue(current.value);
-      setState({ freeForm: false });
+      setValue(current.value, { freeForm: false });
       fireEvent('pick', input.value, current.item, index);
     }
   }
@@ -560,7 +559,7 @@ module.exports = (apiKey, options = {}) => {
           focus: false,
           freeForm: false,
         });
-        fireEvent('pick', value, results[0]);
+        fireEvent('pick', value, results[0], 0);
       }
     });
   }
