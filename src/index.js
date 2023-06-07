@@ -547,7 +547,7 @@ module.exports = (apiKey, options = {}) => {
 
   // First request if `countryAutoFill: true` and `types: ['country']`
   // ----------------------------------------
-  if (countryAutoFill && pkOptions.types.includes('country') && pkOptions.types.length === 1) {
+  if (countryAutoFill && pkOptions.types?.length === 1 && pkOptions.types.includes('country')) {
     pk.reverse({
       countryByIP: true,
       maxResults: 1,
