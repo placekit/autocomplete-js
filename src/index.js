@@ -558,7 +558,7 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
 
     // update suggestions panel class
     if (isString(className)) {
-      suggestionsPanel.className = 'pk-suggestions';
+      suggestionsPanel.className = 'pka-suggestions';
       suggestionsPanel.classList.add(...className.split(/\s+/));
     }
 
