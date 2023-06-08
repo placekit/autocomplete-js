@@ -9,6 +9,7 @@ export type PKAState = {
   dirty: boolean;
   empty: boolean;
   freeForm: boolean;
+  geolocation: boolean;
 };
 
 export interface PKAClient {
@@ -23,11 +24,10 @@ export interface PKAClient {
   on(event: 'dirty', handler?: PKAHandlers['dirty']): PKAClient;
   on(event: 'empty', handler?: PKAHandlers['empty']): PKAClient;
   on(event: 'freeForm', handler?: PKAHandlers['freeForm']): PKAClient;
-  on(event: 'state', handler?: PKAHandlers['state']): PKAClient;
   on(event: 'geolocation', handler?: PKAHandlers['geolocation']): PKAClient;
+  on(event: 'state', handler?: PKAHandlers['state']): PKAClient;
   readonly handlers: Partial<PKAHandlers>;
   readonly state: PKAState;
-  readonly hasGeolocation: boolean;
   requestGeolocation(opts?: Object, cancelUpdate?: boolean): Promise<GeolocationPosition>;
   open(): PKAClient;
   close(): PKAClient;
@@ -41,11 +41,11 @@ export type PKAHandlers = {
   results: (query: string, results: PKResult[]) => void;
   pick: (value: string, item: PKResult, index: number) => void;
   error: (error: Object) => void;
-  dirty: (dirty: boolean) => void;
-  empty: (empty: boolean) => void;
-  freeForm: (freeForm: boolean) => void;
+  dirty: (bool: boolean) => void;
+  empty: (bool: boolean) => void;
+  freeForm: (bool: boolean) => void;
+  geolocation: (bool: boolean, position?: GeolocationPosition) => void;
   state: (state: PKAState) => void;
-  geolocation: (hasGeolocation: boolean, position?: GeolocationPosition) => void;
 };
 
 export type PKAOptions = PKOptions & {
