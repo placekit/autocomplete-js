@@ -190,6 +190,7 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
     empty: !input.value,
     dirty: false,
     freeForm: true,
+    geolocation: false,
   };
 
   // Utility functions
@@ -208,8 +209,9 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
   /**
    * Set state value and fire event only if it changes
    * @arg {Partial<State>} partial Partial key/val state object
+   * @arg {...*} args Extra arguments forwarded to event
    */
-  function setState(partial) {
+  function setState(partial, ...args) {
     if (!isObject(partial)) {
       throw (`TypeError: setState first argument must be a key/value object.`);
     }
@@ -217,7 +219,7 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
     for (const k in state) {
       if (k in partial && partial[k] !== state[k]) {
         state[k] = partial[k];
-        fireEvent(k, state[k]);
+        fireEvent(k, state[k], ...args);
         update = true;
       }
     }
@@ -252,6 +254,7 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
         input.dispatchEvent(new Event('change'));
         storeValue();
         setState({
+          dirty: true,
           empty: !input.value,
           freeForm,
         });
@@ -324,7 +327,7 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
       suggestionsList.appendChild(element);
     }
     popperInstance.update();
-    togglePanel(!!query || pk.hasGeolocation);
+    togglePanel(!!query || state.geolocation);
     fireEvent('results', query, items);
   }
 
@@ -655,16 +658,6 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
   });
 
   /**
-   * Forward `pk.hasGeolocation`
-   * @member {boolean}
-   * @memberof client
-   * @readonly
-   */
-  Object.defineProperty(client, 'hasGeolocation', {
-    get: () => pk.hasGeolocation,
-  });
-
-  /**
    * Clear input value
    * @memberof client
    * @return {client}
@@ -755,7 +748,7 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
    */
   client.requestGeolocation = (opts = {}, cancelUpdate = false) => {
     return pk.requestGeolocation(opts).then((pos) => {
-      fireEvent('geolocation', true, pos);
+      setState({ geolocation: true }, pos);
       if (!cancelUpdate) {
         pk.search(input.value)
           .then(({ results }) => {
@@ -767,7 +760,7 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
       }
       return pos;
     }).catch((err) => {
-      fireEvent('geolocation', false);
+      setState({ geolocation: false });
       throw err;
     });
   };

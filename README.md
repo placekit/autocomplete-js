@@ -114,7 +114,6 @@ If you have trouble importing CSS from `node_modules`, copy/paste [its content](
 - [`pka.on()`](#pkaon)
 - [`pka.handlers`](#pkahandlers)
 - [`pka.requestGeolocation()`](#pkarequestGeolocation)
-- [`pka.hasGeolocation`](#pkahasGeolocation)
 - [`pka.open()`](#pkaopen)
 - [`pka.close()`](#pkaclose)
 - [`pka.clear()`](#pkaclear)
@@ -235,7 +234,7 @@ pka.configure({
 Read-only object of input state.
 
 ```js
-console.log(pka.state); // {dirty: false, empty: false, freeForm: true}
+console.log(pka.state); // {dirty: false, empty: false, freeForm: true, geolocation: false}
 
 // `true` after the user modifies the input value.
 console.log(pka.state.dirty); // true or false
@@ -245,6 +244,9 @@ console.log(pka.state.empty); // true or false
 
 // `true` if the input has a free form value or `false` if value is selected from the suggestions.
 console.log(pka.state.freeForm); // true or false
+
+// `true` if device geolocation has been granted.
+console.log(pka.state.geolocation); // true or false
 ```
 
 The `freeForm` value comes handy if you need to implement a strict validation of the address, but we don't interfere with how to implement it as input validation is always very specific to the project's stack.
@@ -259,11 +261,11 @@ pka.on('open', () => {})
   .on('results', (query, results) => {})
   .on('pick', (value, item, index) => {})
   .on('error', (error) => {})
-  .on('dirty', (dirty) => {})
-  .on('empty', (empty) => {})
-  .on('freeForm', (freeForm) => {})
+  .on('dirty', (bool) => {})
+  .on('empty', (bool) => {})
+  .on('freeForm', (bool) => {})
+  .on('geolocation', (bool, position) => {});
   .on('state', (state) => {})
-  .on('geolocation', (hasGeolocation, position) => {});
 ```
 
 If you register a same event twice, the first one will be replaced.
@@ -334,6 +336,15 @@ Triggered when input value changes.
 | --- | --- | --- |
 | `freeForm` | `boolean` | `true` on user input, `false` on `pick` event. |
 
+##### `geolocation`
+
+Triggered when `state.geolocation` value changes (a.k.a. when `pka.requestGeolocation` is called).
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `geolocation` | `boolean` | `true` if granted, `false` if denied. |
+| `position` | [`GeolocationPosition \| undefined`](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition) | Passed when `geolocation` is `true`. |
+
 ##### `state`
 
 Triggered when one of the input states changes.
@@ -341,15 +352,6 @@ Triggered when one of the input states changes.
 | Parameter | Type | Description |
 | --- | --- | --- |
 | `state` | `object` | The current input state. |
-
-##### `geolocation`
-
-Triggered when `hasGeolocation` value changes (a.k.a. when `pka.requestGeolocation` is called).
-
-| Parameter | Type | Description |
-| --- | --- | --- |
-| `hasGeolocation` | `boolean` | `true` if granted, `false` if denied. |
-| `position` | [`GeolocationPosition`](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition) | Passed when `hasGeolocation` is `true`. |
 
 ### `pka.handlers`
 
@@ -374,14 +376,6 @@ pka.requestGeolocation({ timeout: 10000 }).then((pos) => console.log(pos.coords)
 | `cancelUpdate` | `boolean` (optional) | If `false` (default), suggestions list updates immediately based on device location. |
 
 The location will be store in the `coordinates` global options, you can still manually override it.
-
-### `pka.hasGeolocation`
-
-Reads if device geolocation is activated or not (read-only).
-
-```js
-console.log(pka.hasGeolocation); // true or false
-```
 
 ### `pka.open()`
 
