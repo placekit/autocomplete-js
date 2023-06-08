@@ -5,8 +5,8 @@
       title="Activate geolocation"
       role="switch"
       class="pka-input-geolocation"
-      :class="{ 'pka-enabled': hasGeolocation }"
-      :aria-checked="hasGeolocation"
+      :class="{ 'pka-enabled': state.geolocation }"
+      :aria-checked="state.geolocation"
       :onClick="client?.requestGeolocation"
     >
       <span class="pka-sr-only">Activate geolocation</span>
@@ -37,7 +37,6 @@ export default {
     return {
       client: {},
       state: {},
-      hasGeolocation: false,
     };
   },
   mounted() {
@@ -48,11 +47,8 @@ export default {
       .on('state', (state) => {
         this.state = { ...state }; // spread to force update state with new value
       })
-      .on('geolocation', (bool) => {
-        this.hasGeolocation = bool;
-      });
 
-    // init state from client
+    // inject initial state from client
     this.state = { ...this.client.state }; // spread to force update state with new value
   },
   beforeUnmount() {

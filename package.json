@@ -36,8 +36,7 @@
     "dev": "npm-watch build",
     "build": "rollup -c",
     "lint": "eslint ./src",
-    "format": "eslint ./src --fix",
-    "install:examples": "find examples -maxdepth 2 -name package.json -not -path \"*/node_modules/*\" -execdir npm i \\;"
+    "format": "eslint ./src --fix"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.0",
