@@ -7,7 +7,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@placekit/autocomplete-js": "^1.4.0",
+    "@placekit/autocomplete-js": "^1.4.1",
     "vue": "^3.3.4"
   },
   "devDependencies": {
