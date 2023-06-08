@@ -247,16 +247,15 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
    * @arg {string} [value] New input value
    * @arg {bool} [preview=false] `true` to prevent change event
    */
-  function setValue(value, { preview = false, focus = true, freeForm = true } = {}) {
+  function setValue(value, { preview = false, focus = true, ...newState } = {}) {
     if (isString(value)) {
       input.value = value;
       if (!preview) {
         input.dispatchEvent(new Event('change'));
         storeValue();
         setState({
-          dirty: true,
           empty: !input.value,
-          freeForm,
+          ...newState,
         });
       }
       if (focus) {
@@ -375,7 +374,7 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
       });
       current.element.classList.add('pka-selected');
       current.element.setAttribute('aria-selected', true);
-      setValue(current.value, { freeForm: false });
+      setValue(current.value, { dirty: true, freeForm: false });
       fireEvent('pick', input.value, current.item, index);
     }
   }
@@ -482,7 +481,7 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
       if (e.target.classList.contains('pka-suggestions-item-action')) {
         const current = suggestions[index];
         if (current) {
-          setValue(`${current.value} `); // add trailing space
+          setValue(`${current.value} `, { dirty: true, freeform: false }); // add trailing space
         }
       } else {
         applySuggestion(index);
@@ -600,6 +599,7 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
           setValue(value, {
             preview: false,
             focus: false,
+            dirty: false,
             freeForm: false,
           });
           fireEvent('pick', value, results[0], 0);
