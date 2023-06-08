@@ -599,7 +599,6 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
           setValue(value, {
             preview: false,
             focus: false,
-            dirty: false,
             freeForm: false,
           });
           fireEvent('pick', value, results[0], 0);
