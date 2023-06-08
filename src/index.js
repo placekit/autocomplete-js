@@ -85,31 +85,17 @@ const isObject = (v) => typeof v === 'object' && !Array.isArray(v) && v !== null
  * @desc Fetch wrapper over the PlaceKit API to implement a retry strategy and parameters checking.
  * @module placekitAutocomplete
  * @arg {string} apiKey PlaceKit API key
- * @arg {Options} [options] PlaceKit global parameters
+ * @arg {Options} [initOptions] PlaceKit global parameters
  * @return {client}
  */
-module.exports = (apiKey, options = {}) => {
+module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
   // Init client
   // ----------------------------------------
   const client = {};
   const handlers = {};
 
-  // Check options
-  // ----------------------------------------
-  // extract options after overriding defaults
-  const {
-    target,
-    offset,
-    template,
-    formatValue,
-    noResults,
-    strategy,
-    flip,
-    countryAutoFill,
-    className,
-    ...pkOptions
-  } = {
-    target: '#placekit',
+  // default options
+  const options = {
     offset: 4,
     template: (item) => {
       const icon = item.type === 'country' ?
@@ -138,22 +124,10 @@ module.exports = (apiKey, options = {}) => {
     strategy: 'absolute',
     flip: false,
     countryAutoFill: false,
-    ...options,
   };
 
-  // throw error if invalid options
-  if (!template?.call) {
-    throw (`TypeError: options.template must be a function returning a string.`);
-  }
-
-  if (!formatValue?.call) {
-    throw (`TypeError: options.formatValue must be a function returning a string.`);
-  }
-
-  if (!isString(noResults) && !noResults?.call) {
-    throw (`TypeError: options.noResults must be a function returning a string.`);
-  }
-
+  // Init DOM
+  // ----------------------------------------
   const input = isString(target) ? document.querySelector(target) : target;
   if (!input) {
     throw (`Error: target not found.`);
@@ -161,21 +135,15 @@ module.exports = (apiKey, options = {}) => {
     throw (`Error: target must be an HTML input of type "text" or "search".`);
   }
 
-  // add accessibility attributes
+  // add input accessibility attributes
   input.setAttribute('autocomplete', 'off');
   input.setAttribute('aria-autocomplete', 'list');
   input.setAttribute('aria-expanded', false);
   input.setAttribute('role', 'combobox');
 
-
-  // Build suggestions panel
-  // ----------------------------------------
   // suggestions panel
   const suggestionsPanel = document.createElement('div');
   suggestionsPanel.classList.add('pka-suggestions');
-  if (isString(className)) {
-    suggestionsPanel.classList.add(...className.split(/\s+/));
-  }
 
   // suggestions list
   const suggestionsList = document.createElement('div');
@@ -201,25 +169,10 @@ module.exports = (apiKey, options = {}) => {
   // Instantiate third-party libs
   // ----------------------------------------
   // PlaceKit JS client
-  const pk = placekit(apiKey, pkOptions);
+  const pk = placekit(apiKey);
 
   // Popper.js for panel positionning
-  const popperInstance = createPopper(input, suggestionsPanel, {
-    placement: 'bottom-start',
-    strategy,
-    modifiers: [
-      {
-        name: 'flip',
-        enabled: flip,
-      },
-      {
-        name: 'offset',
-        options: {
-          offset: [0, offset],
-        },
-      }
-    ],
-  });
+  const popperInstance = createPopper(input, suggestionsPanel);
 
   // States
   // ----------------------------------------
@@ -237,6 +190,7 @@ module.exports = (apiKey, options = {}) => {
     empty: !input.value,
     dirty: false,
     freeForm: true,
+    geolocation: false,
   };
 
   // Utility functions
@@ -255,8 +209,9 @@ module.exports = (apiKey, options = {}) => {
   /**
    * Set state value and fire event only if it changes
    * @arg {Partial<State>} partial Partial key/val state object
+   * @arg {...*} args Extra arguments forwarded to event
    */
-  function setState(partial) {
+  function setState(partial, ...args) {
     if (!isObject(partial)) {
       throw (`TypeError: setState first argument must be a key/value object.`);
     }
@@ -264,7 +219,7 @@ module.exports = (apiKey, options = {}) => {
     for (const k in state) {
       if (k in partial && partial[k] !== state[k]) {
         state[k] = partial[k];
-        fireEvent(k, state[k]);
+        fireEvent(k, state[k], ...args);
         update = true;
       }
     }
@@ -292,7 +247,7 @@ module.exports = (apiKey, options = {}) => {
    * @arg {string} [value] New input value
    * @arg {bool} [preview=false] `true` to prevent change event
    */
-  function setValue(value, { preview = false, focus = true, freeForm = true } = {}) {
+  function setValue(value, { preview = false, focus = true, ...newState } = {}) {
     if (isString(value)) {
       input.value = value;
       if (!preview) {
@@ -300,7 +255,7 @@ module.exports = (apiKey, options = {}) => {
         storeValue();
         setState({
           empty: !input.value,
-          freeForm,
+          ...newState,
         });
       }
       if (focus) {
@@ -341,7 +296,7 @@ module.exports = (apiKey, options = {}) => {
       element.setAttribute('role', 'option');
       element.setAttribute('tabindex', -1);
       element.setAttribute('aria-selected', false);
-      element.innerHTML = template(item, i);
+      element.innerHTML = options.template(item, i);
       element.addEventListener('mouseover', () => {
         clearActive();
         element.classList.add('pka-active');
@@ -356,7 +311,7 @@ module.exports = (apiKey, options = {}) => {
       suggestions.push({
         element,
         item,
-        value: formatValue(item).trim(),
+        value: options.formatValue(item).trim(),
       });
     }
     if (!suggestions.length) {
@@ -367,11 +322,11 @@ module.exports = (apiKey, options = {}) => {
       element.setAttribute('tabindex', -1);
       element.setAttribute('aria-selected', false);
       element.setAttribute('aria-disabled', true);
-      element.innerHTML = noResults?.call ? noResults(query) : noResults;
+      element.innerHTML = options.noResults?.call ? options.noResults(query) : options.noResults;
       suggestionsList.appendChild(element);
     }
     popperInstance.update();
-    togglePanel(!!query || pk.hasGeolocation);
+    togglePanel(!!query || state.geolocation);
     fireEvent('results', query, items);
   }
 
@@ -419,7 +374,7 @@ module.exports = (apiKey, options = {}) => {
       });
       current.element.classList.add('pka-selected');
       current.element.setAttribute('aria-selected', true);
-      setValue(current.value, { freeForm: false });
+      setValue(current.value, { dirty: true, freeForm: false });
       fireEvent('pick', input.value, current.item, index);
     }
   }
@@ -526,7 +481,7 @@ module.exports = (apiKey, options = {}) => {
       if (e.target.classList.contains('pka-suggestions-item-action')) {
         const current = suggestions[index];
         if (current) {
-          setValue(`${current.value} `); // add trailing space
+          setValue(`${current.value} `, { dirty: true, freeform: false }); // add trailing space
         }
       } else {
         applySuggestion(index);
@@ -545,26 +500,6 @@ module.exports = (apiKey, options = {}) => {
     });
   }
 
-  // First request if `countryAutoFill: true` and `types: ['country']`
-  // ----------------------------------------
-  if (countryAutoFill && pkOptions.types?.length === 1 && pkOptions.types.includes('country')) {
-    pk.reverse({
-      countryByIP: true,
-      maxResults: 1,
-    }).then(({ results }) => {
-      if (results.length) {
-        const value = formatValue(results[0]);
-        setValue(value, {
-          preview: false,
-          focus: false,
-          freeForm: false,
-        });
-        fireEvent('pick', value, results[0], 0);
-      }
-    });
-  }
-
-
   // Bind events
   // ----------------------------------------
   onResize();
@@ -577,6 +512,103 @@ module.exports = (apiKey, options = {}) => {
   suggestionsList.addEventListener('click', onPick);
   window.addEventListener('keydown', onKeyNav);
   window.addEventListener('click', onClickOutside);
+
+  // Configure
+  // ----------------------------------------
+  /**
+   * Update parameters
+   * @arg {Options} [opts] PlaceKit Autocomplet JS parameters
+   */
+  function configure(opts = {}) {
+    // throw error if invalid options
+    if (typeof opts.template !== 'undefined' && !opts.template?.call) {
+      throw (`TypeError: options.template must be a function returning a string.`);
+    }
+
+    if (typeof opts.formatValue !== 'undefined' && !opts.formatValue?.call) {
+      throw (`TypeError: options.formatValue must be a function returning a string.`);
+    }
+
+    if (
+      typeof opts.noResults !== 'undefined' &&
+      !isString(opts.noResults) &&
+      !opts.noResults?.call
+    ) {
+      throw (`TypeError: options.noResults must be a function returning a string.`);
+    }
+
+    if (typeof opts.target !== 'undefined') {
+      throw (`TypeError: options.target can not be modified.`);
+    }
+
+    // update and destructure options
+    /* eslint-disable no-unused-vars */
+    const {
+      offset,
+      template,
+      formatValue,
+      noResults,
+      strategy,
+      flip,
+      countryAutoFill,
+      className,
+      ...pkOptions
+    } = Object.assign(options, opts);
+    /* eslint-enable no-unused-vars */
+
+    // update suggestions panel class
+    if (isString(className)) {
+      suggestionsPanel.className = 'pk-suggestions';
+      suggestionsPanel.classList.add(...className.split(/\s+/));
+    }
+
+    // update PlaceKit Client config
+    pk.configure(pkOptions);
+
+    // update PopperJS config
+    popperInstance.setOptions({
+      placement: 'bottom-start',
+      strategy,
+      modifiers: [
+        {
+          name: 'flip',
+          enabled: flip,
+        },
+        {
+          name: 'offset',
+          options: {
+            offset: [0, offset],
+          },
+        }
+      ],
+    });
+
+    // first request if empty input `countryAutoFill: true` and `types: ['country']`
+    if (
+      countryAutoFill &&
+      !input.value &&
+      pkOptions.types?.length === 1 &&
+      pkOptions.types.includes('country')
+    ) {
+      pk.reverse({
+        countryByIP: true,
+        maxResults: 1,
+      }).then(({ results }) => {
+        if (results.length) {
+          const value = formatValue(results[0]);
+          setValue(value, {
+            preview: false,
+            focus: false,
+            freeForm: false,
+          });
+          fireEvent('pick', value, results[0], 0);
+        }
+      });
+    }
+  }
+
+  // initialize with instance options
+  configure(initOptions);
 
   // Return instance
   // ----------------------------------------
@@ -598,6 +630,7 @@ module.exports = (apiKey, options = {}) => {
    */
   Object.defineProperty(client, 'options', {
     get: () => ({
+      target,
       ...options,
       ...pk.options,
     }),
@@ -621,16 +654,6 @@ module.exports = (apiKey, options = {}) => {
    */
   Object.defineProperty(client, 'state', {
     get: () => state,
-  });
-
-  /**
-   * Forward `pk.hasGeolocation`
-   * @member {boolean}
-   * @memberof client
-   * @readonly
-   */
-  Object.defineProperty(client, 'hasGeolocation', {
-    get: () => pk.hasGeolocation,
   });
 
   /**
@@ -705,13 +728,13 @@ module.exports = (apiKey, options = {}) => {
   };
 
   /**
-   * Set global parameters
+   * Update options
    * @memberof client
-   * @arg {PKOptions} [opts] PlaceKit JS Client global parameters
+   * @arg {Options} [opts] PlaceKit Autocomplet JS options
    * @return {client}
    */
   client.configure = (opts = {}) => {
-    pk.configure(opts);
+    configure(opts);
     return client;
   };
 
@@ -722,9 +745,9 @@ module.exports = (apiKey, options = {}) => {
    * @arg {boolean} [cancelUpdate] Cancel suggestions list auto-update
    * @return {Promise<Position>}
    */
-  client.requestGeolocation = (opts = {}, cancelUpdate = false) =>
-    pk.requestGeolocation(opts).then((pos) => {
-      fireEvent('geolocation', true, pos);
+  client.requestGeolocation = (opts = {}, cancelUpdate = false) => {
+    return pk.requestGeolocation(opts).then((pos) => {
+      setState({ geolocation: true }, pos);
       if (!cancelUpdate) {
         pk.search(input.value)
           .then(({ results }) => {
@@ -736,9 +759,10 @@ module.exports = (apiKey, options = {}) => {
       }
       return pos;
     }).catch((err) => {
-      fireEvent('geolocation', false);
+      setState({ geolocation: false });
       throw err;
     });
+  };
 
   return client;
 };
