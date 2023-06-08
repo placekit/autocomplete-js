@@ -137,6 +137,8 @@ const pka = placekitAutocomplete('<your-api-key>', {
 | `apiKey` | `string` | API key |
 | `options` | `key-value mapping` (optional) | Global parameters (see [options](#pkaoptions)) |
 
+⚠️ `target` must be set when instanciating `placekitAutocomplete`, all other options can be set later with [`pka.configure()`](#pkaconfigure).
+
 ### `pka.input`
 
 Input field element passed as `target` option, read-only.
@@ -212,10 +214,13 @@ See our [country field example](./example/autocomplete-js-country).
 
 ### `pka.configure()`
 
-Updates search parameters (only JS client options!). Returns the instance so you can chain methods.
+Updates all parameters (**except `target`**). Returns the instance so you can chain methods.
 
 ```js
 pka.configure({
+  className: 'my-suggestions',
+  flip: true,
+  formatValue: (item) => `${item.name} ${item.city}`,
   language: 'fr',
   maxResults: 5,
 });
