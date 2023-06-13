@@ -177,7 +177,7 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
   // States
   // ----------------------------------------
   // internal
-  let userValue = null;
+  let backupValue = null;
   let suggestions = [];
 
   /**
@@ -229,36 +229,20 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
   }
 
   /**
-   * Backup user value to restore it on cancel
-   */
-  function storeValue() {
-    userValue = input.value;
-  }
-
-  /**
-   * Restore backed-up user value
-   * @arg {bool} [clear] clear backed-up user value
-   */
-  function restoreValue(clear = false) {
-    if (userValue !== null) {
-      input.value = userValue;
-      if (clear) {
-        userValue = null;
-      }
-    }
-  }
-
-  /**
    * Manually set input value
    * @arg {string} [value] New input value
-   * @arg {bool} [preview=false] `true` to prevent change event
+   * @arg {object} [opts] Options
+   * @arg {bool} [opts.notify=false] `true` to dispatch events and update state
+   * @arg {bool} [opts.focus=true] `true` to focus the input after value changes
+   * @arg {State} [newState] Update `state` on the go, only if `notify` is `true`
    */
-  function setValue(value, { preview = false, focus = true, ...newState } = {}) {
+  function setValue(value, { notify = false, focus = true } = {}, newState) {
     if (isString(value)) {
-      input.value = value;
-      if (!preview) {
-        input.dispatchEvent(new Event('change'));
-        storeValue();
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set.call(input, value);
+      if (notify) {
+        backupValue = null;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
         setState({
           empty: !input.value,
           ...newState,
@@ -266,6 +250,19 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
       }
       if (focus) {
         input.focus();
+      }
+    }
+  }
+
+  /**
+   * Restore backed-up user value
+   * @arg {bool} [clear] clear backed-up user value
+   */
+  function restoreValue(clear = false) {
+    if (backupValue !== null) {
+      setValue(backupValue, { focus: false });
+      if (clear) {
+        backupValue = null;
       }
     }
   }
@@ -348,6 +345,9 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
    * @arg {number} index Index of the suggestion to move cursor to
    */
   function moveActive(index) {
+    if (backupValue === null) {
+      backupValue = input.value;
+    }
     const prev = suggestions.findIndex(({ element }) => element.classList.contains('pka-active'));
     clearActive();
     const steps = suggestions.length + 1; // cycle through user value + suggestions
@@ -360,7 +360,7 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
       suggestionsList.scrollTo({
         top: current.element.offsetTop,
       });
-      setValue(current.value, { preview: true });
+      setValue(current.value);
     }
   }
 
@@ -380,7 +380,11 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
       });
       current.element.classList.add('pka-selected');
       current.element.setAttribute('aria-selected', true);
-      setValue(current.value, { dirty: true, freeForm: false });
+      setValue(current.value, {
+        notify: true,
+        dirty: true,
+        freeForm: false,
+      });
       fireEvent('pick', input.value, current.item, index);
     }
   }
@@ -388,18 +392,28 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
   // Event handlers
   // ----------------------------------------
   /**
-   * Update suggestions as user types
+   * Search and open suggestions
    */
-  function onInput() {
-    pk.search(input.value)
-      .then(({ results }) => updateSuggestions(input.value.trim(), results))
-      .catch((err) => fireEvent('error', err));
-    storeValue();
+  function onHumanInput() {
+    backupValue = null;
     setState({
       dirty: true,
       empty: !input.value,
       freeForm: true,
     });
+    pk.search(input.value)
+      .then(({ results }) => updateSuggestions(input.value.trim(), results))
+      .catch((err) => fireEvent('error', err));
+  }
+
+  /**
+   * Update suggestions as user types
+   * @arg {InputEvent} e InputEvent object
+   */
+  function onInput(e) {
+    if (e instanceof InputEvent) {
+      onHumanInput();
+    }
   }
 
   /**
@@ -407,7 +421,7 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
    */
   function onFocus() {
     if (!state.dirty && !!input.value) {
-      onInput();
+      onHumanInput();
     } else {
       togglePanel(!!input.value.trim());
     }
@@ -485,11 +499,17 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
     const index = suggestions.findIndex(({ element }) => element.contains(e.target));
     if (index > -1) {
       if (e.target.classList.contains('pka-suggestions-item-action')) {
+        // inject suggestion with trailing space and keep typing
         const current = suggestions[index];
         if (current) {
-          setValue(`${current.value} `, { dirty: true, freeform: false }); // add trailing space
+          setValue(`${current.value} `, {
+            notify: true,
+            dirty: true,
+            freeform: false,
+          });
         }
       } else {
+        // apply suggestion
         applySuggestion(index);
         togglePanel(false);
       }
@@ -603,7 +623,7 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
         if (results.length) {
           const value = formatValue(results[0]);
           setValue(value, {
-            preview: false,
+            notify: true,
             focus: false,
             freeForm: false,
           });
@@ -668,11 +688,23 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
    * @return {client}
    */
   client.clear = () => {
-    input.value = '';
-    input.dispatchEvent(new Event('change'));
-    input.dispatchEvent(new Event('input'));
+    setValue('', {
+      notify: true,
+      focus: false,
+    });
     togglePanel(false);
     input.focus();
+    return client;
+  };
+
+  /**
+   * Manually set input value
+   * @borrows setValue as client.setValue
+   * @memberof client
+   * @return {client}
+   */
+  client.setValue = (...args) => {
+    setValue(...args);
     return client;
   };
 
