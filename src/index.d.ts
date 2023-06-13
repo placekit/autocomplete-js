@@ -32,6 +32,7 @@ export interface PKAClient {
   open(): PKAClient;
   close(): PKAClient;
   clear(): PKAClient;
+  setValue(value?: string | null, notify?: boolean): PKAClient;
   destroy(): void;
 }
 

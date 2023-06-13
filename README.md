@@ -117,6 +117,7 @@ If you have trouble importing CSS from `node_modules`, copy/paste [its content](
 - [`pka.open()`](#pkaopen)
 - [`pka.close()`](#pkaclose)
 - [`pka.clear()`](#pkaclear)
+- [`pka.setValue()`](#pkasetvalue)
 - [`pka.destroy()`](#pkadestroy)
 
 ### `placekitAutocomplete()`
@@ -400,6 +401,22 @@ Clears the input value, focus the field, and closes the suggestion panel.
 ```js
 pka.clear();
 ```
+
+### `pka.setValue()`
+
+Manually set the input value. Useful for third-party wrappers like React.
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `value` | `string | null` (optional) | New input value, operation ignored if `undefined` or `null`. |
+| `notify` | `boolean` (optional) | Pass `true` to dispatch `change` and `input` events and update state (default `false`). |
+
+```js
+pka.setValue('new value');
+pka.setValue('new value', true); // dispatch `change` and `input` event
+```
+
+**NOTE**: `state.empty` will automatically be updated based on the input value if `notify: true`. `state.dirty` and `state.freeForm` remain unchanged until the user focuses the input.
 
 ### `pka.destroy()`
 
