@@ -340,6 +340,7 @@ button.pka-suggestions-item-action {
 button.pka-suggestions-item-action {
   appearance: none;
   border: none;
+  background-color: transparent;
 }
 
 .pka-suggestions-item-icon {

@@ -46,8 +46,8 @@ For React implementations, check our [PlaceKit Autocomplete React](https://githu
 First, import the library and the default stylesheet into the `<head>` tag in your HTML:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.4.2/dist/placekit-autocomplete.min.css" />
-<script src="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.4.2"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.5.0/dist/placekit-autocomplete.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.5.0"></script>
 ```
 
 After importing the library, `placekitAutocomplete` becomes available as a global:
