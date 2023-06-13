@@ -6,14 +6,14 @@ require('./placekit.css'); // removed at build time
 /**
  * Check if value is string
  * @arg {*} v Value to test
- * @return {bool}
+ * @return {boolean}
  */
 const isString = (v) => Object.prototype.toString.call(v) === '[object String]';
 
 /**
  * Check if value is object
  * @arg {*} v Value to test
- * @return {bool}
+ * @return {boolean}
  */
 const isObject = (v) => typeof v === 'object' && !Array.isArray(v) && v !== null;
 
@@ -182,9 +182,9 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
 
   /**
    * @typedef {Object} State Client external state
-   * @prop {bool} dirty has the input value been modified
-   * @prop {bool} empty is the input value empty
-   * @prop {bool} freeForm is the input value set manually (false if picked from the suggestions list)
+   * @prop {boolean} dirty has the input value been modified
+   * @prop {boolean} empty is the input value empty
+   * @prop {boolean} freeForm is the input value set manually (false if picked from the suggestions list)
    */
   const state = {
     empty: !input.value,
@@ -230,23 +230,19 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
 
   /**
    * Manually set input value
-   * @arg {string} [value] New input value
-   * @arg {object} [opts] Options
-   * @arg {bool} [opts.notify=false] `true` to dispatch events and update state
-   * @arg {bool} [opts.focus=true] `true` to focus the input after value changes
-   * @arg {State} [newState] Update `state` on the go, only if `notify` is `true`
+   * @arg {string | null} [value] New input value
+   * @arg {Object} [opts] Options
+   * @arg {boolean} [opts.notify=false] `true` to dispatch events and update state
+   * @arg {boolean} [opts.focus=true] `true` to focus the input after value changes
    */
-  function setValue(value, { notify = false, focus = true } = {}, newState) {
+  function setValue(value, { notify = false, focus = true } = {}) {
     if (isString(value)) {
       Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set.call(input, value);
+      setState({ empty: !input.value });
       if (notify) {
         backupValue = null;
         input.dispatchEvent(new Event('input', { bubbles: true }));
         input.dispatchEvent(new Event('change', { bubbles: true }));
-        setState({
-          empty: !input.value,
-          ...newState,
-        });
       }
       if (focus) {
         input.focus();
@@ -256,7 +252,7 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
 
   /**
    * Restore backed-up user value
-   * @arg {bool} [clear] clear backed-up user value
+   * @arg {boolean} [clear] clear backed-up user value
    */
   function restoreValue(clear = false) {
     if (backupValue !== null) {
@@ -380,8 +376,8 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
       });
       current.element.classList.add('pka-selected');
       current.element.setAttribute('aria-selected', true);
-      setValue(current.value, {
-        notify: true,
+      setValue(current.value, { notify: true });
+      setState({
         dirty: true,
         freeForm: false,
       });
@@ -397,8 +393,8 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
   function onHumanInput() {
     backupValue = null;
     setState({
-      dirty: true,
       empty: !input.value,
+      dirty: true,
       freeForm: true,
     });
     pk.search(input.value)
@@ -429,7 +425,7 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
 
   /**
    * Close panel on click outside
-   * @arg {object} e Click event
+   * @arg {Object} e Click event
    */
   function onClickOutside(e) {
     if (![input, suggestionsPanel].includes(e.target) && !suggestionsPanel.contains(e.target)) {
@@ -440,7 +436,7 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
 
   /**
    * Keyboard navigation
-   * @arg {object} e Keydown event
+   * @arg {Object} e Keydown event
    */
   function onKeyNav(e) {
     if (input === document.activeElement && !!input.value.trim()) {
@@ -492,7 +488,7 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
   /**
    * Click on a suggestion to inject its value into the input
    * "action button" only previews the value
-   * @arg {object} e Click event
+   * @arg {Object} e Click event
    */
   function onPick(e) {
     e.stopPropagation();
@@ -502,10 +498,10 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
         // inject suggestion with trailing space and keep typing
         const current = suggestions[index];
         if (current) {
-          setValue(`${current.value} `, {
-            notify: true,
+          setValue(`${current.value} `, { notify: true });
+          setState({
             dirty: true,
-            freeform: false,
+            freeForm: false,
           });
         }
       } else {
@@ -625,8 +621,8 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
           setValue(value, {
             notify: true,
             focus: false,
-            freeForm: false,
           });
+          setState({ freeForm: false });
           fireEvent('pick', value, results[0], 0);
         }
       });
@@ -699,12 +695,16 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
 
   /**
    * Manually set input value
-   * @borrows setValue as client.setValue
+   * @arg {string | null} [value] New input value
+   * @arg {boolean} [notify] Dispatch `change` and `input` events
    * @memberof client
    * @return {client}
    */
-  client.setValue = (...args) => {
-    setValue(...args);
+  client.setValue = (value, notify = false) => {
+    setValue(value, {
+      notify,
+      focus: false,
+    });
     return client;
   };
 
