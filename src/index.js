@@ -177,7 +177,7 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
   // States
   // ----------------------------------------
   // internal
-  let userValue = '';
+  let userValue = null;
   let suggestions = [];
 
   /**
@@ -237,9 +237,15 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
 
   /**
    * Restore backed-up user value
+   * @arg {bool} [clear] clear backed-up user value
    */
-  function restoreValue() {
-    input.value = userValue;
+  function restoreValue(clear = false) {
+    if (userValue !== null) {
+      input.value = userValue;
+      if (clear) {
+        userValue = null;
+      }
+    }
   }
 
   /**
@@ -391,7 +397,7 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
     storeValue();
     setState({
       dirty: true,
-      empty: !input.value.trim(),
+      empty: !input.value,
       freeForm: true,
     });
   }
@@ -413,7 +419,7 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
    */
   function onClickOutside(e) {
     if (![input, suggestionsPanel].includes(e.target) && !suggestionsPanel.contains(e.target)) {
-      restoreValue();
+      restoreValue(true);
       togglePanel(false);
     }
   }
@@ -458,7 +464,7 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
         case 'Escape':
           if (isPanelOpen) {
             e.preventDefault();
-            restoreValue();
+            restoreValue(true);
             togglePanel(false);
           }
           break;
