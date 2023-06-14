@@ -7,14 +7,17 @@
 
 	let input;
 	let client;
+	let state;
 	onMount(() => {
 		client = placekitAutocomplete(env.PUBLIC_PLACEKIT_API_KEY, {
 			target: input,
 			countries: ['fr'],
+		}).on('state', ({ ...newState }) => {
+			state = newState; // spread to force update state with new value
 		});
-		client.on('pick', (_, item) => {
-			alert(JSON.stringify(item, null, 2));
-		});
+
+		// inject initial state from client
+		state = { ...client.state }; // spread to force update state with new value
 		return () => {
 			client.destroy();
 		};
@@ -27,8 +30,8 @@
 		title="Activate geolocation"
 		role="switch"
 		class="pka-input-geolocation"
-		class:pka-enabled={client?.state.geolocation}
-		aria-checked={client?.state.geolocation}
+		class:pka-enabled={state?.geolocation}
+		aria-checked={state?.geolocation}
 		on:click={client?.requestGeolocation}
 	>
 		<span class="pka-sr-only">Activate geolocation</span>
@@ -37,7 +40,7 @@
 		type="button"
 		class="pka-input-clear"
 		title="Clear value"
-		aria-hidden={client?.state.empty}
+		aria-hidden={state?.empty}
 		on:click={client?.clear}
 	>
 		<span class="pka-sr-only">Clear value</span>
