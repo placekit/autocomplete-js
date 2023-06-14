@@ -4,6 +4,8 @@
 
 This example showcases a full address autocomplete field in [Vue.js](https://vuejs.org) with PlaceKit's default style. Vue, as opposed to React, has a quite straightforward integration due to its component lifecycle and state management.
 
+Only using [TailwindCSS](https://tailwindcss.com) as a convenience for the basic styling of the example.
+
 ## Run
 
 ```sh
