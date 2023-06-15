@@ -215,12 +215,6 @@ button.pka-input-clear[aria-hidden="true"] {
   font-size: var(--pka-scale);
 }
 
-@media (min-width: 360px) {
-  .pka-suggestions {
-    min-width: 320px;
-  }
-}
-
 .pka-suggestions.pka-open {
   visibility: visible;
   pointer-events: auto;
