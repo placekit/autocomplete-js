@@ -7,7 +7,7 @@
       class="pka-input-geolocation"
       :class="{ 'pka-enabled': state.geolocation }"
       :aria-checked="state.geolocation"
-      :onClick="client?.requestGeolocation"
+      @click="toggleGeolocation"
     >
       <span class="pka-sr-only">Activate geolocation</span>
     </button>
@@ -16,7 +16,7 @@
       class="pka-input-clear"
       title="Clear value"
       :aria-hidden="state.empty"
-      :onClick="client?.clear"
+      @click="client?.clear"
     >
       <span class="pka-sr-only">Clear value</span>
     </button>
@@ -38,6 +38,17 @@ export default {
       client: {},
       state: {},
     };
+  },
+  methods: {
+    toggleGeolocation: function() {
+      if (this.client) {
+        if (this.state.geolocation) {
+          this.client.clearGeolocation();
+        } else {
+          this.client.requestGeolocation();
+        }
+      }
+    },
   },
   mounted() {
     this.client = placekitAutocomplete(import.meta.env.VITE_PLACEKIT_API_KEY, {

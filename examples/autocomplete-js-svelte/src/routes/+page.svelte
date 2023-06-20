@@ -8,6 +8,17 @@
 	let input;
 	let client;
 	let state;
+
+	function toggleGeolocation() {
+		if (client) {
+			if (state.geolocation) {
+				client.clearGeolocation();
+			} else {
+				client.requestGeolocation();
+			}
+		}
+	}
+
 	onMount(() => {
 		client = placekitAutocomplete(env.PUBLIC_PLACEKIT_API_KEY, {
 			target: input,
@@ -32,7 +43,7 @@
 		class="pka-input-geolocation"
 		class:pka-enabled={state?.geolocation}
 		aria-checked={state?.geolocation}
-		on:click={client?.requestGeolocation}
+		on:click={toggleGeolocation}
 	>
 		<span class="pka-sr-only">Activate geolocation</span>
 	</button>

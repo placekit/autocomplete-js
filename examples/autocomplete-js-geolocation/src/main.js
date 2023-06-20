@@ -11,14 +11,16 @@ const pka = placekitAutocomplete(import.meta.env.VITE_PLACEKIT_API_KEY, {
 
 // request geolocation on click
 const geolocationButton = document.querySelector('#placekit-geolocation');
+pka.on('geolocation', (bool) => {
+  geolocationButton.setAttribute('aria-checked', bool);
+  geolocationButton.classList.toggle('pka-enabled', bool);
+});
 geolocationButton.addEventListener('click', () => {
-  pka.requestGeolocation().then((pos) => {
-    geolocationButton.classList.add('pka-enabled');
-    geolocationButton.setAttribute('aria-checked', true);
-  }).catch(() => {
-    geolocationButton.classList.remove('pka-enabled');
-    geolocationButton.setAttribute('aria-checked', false);
-  });
+  if (pka.state.geolocation) {
+    pka.clearGeolocation();
+  } else {
+    pka.requestGeolocation();
+  }
 });
 
 // clear input on click
