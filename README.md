@@ -114,6 +114,7 @@ If you have trouble importing CSS from `node_modules`, copy/paste [its content](
 - [`pka.on()`](#pkaon)
 - [`pka.handlers`](#pkahandlers)
 - [`pka.requestGeolocation()`](#pkarequestGeolocation)
+- [`pka.clearGeolocation()`](#pkaclearGeolocation)
 - [`pka.open()`](#pkaopen)
 - [`pka.close()`](#pkaclose)
 - [`pka.clear()`](#pkaclear)
@@ -377,6 +378,17 @@ pka.requestGeolocation({ timeout: 10000 }).then((pos) => console.log(pos.coords)
 | `cancelUpdate` | `boolean` (optional) | If `false` (default), suggestions list updates immediately based on device location. |
 
 The location will be store in the `coordinates` global options, you can still manually override it.
+`state.geolocation` will be set to `true`, dispatching both the `geolocation` and `state` events.
+
+### `pka.clearGeolocation()`
+
+Clear device's geolocation stored with [`pka.requestGeolocation`](#pkarequestGeolocation).
+
+```js
+pka.clearGeolocation();
+```
+
+The global option `coordinates` will be deleted and the `state.geolocation` will be set to `false`, dispatching both the `geolocation` and `state` events.
 
 ### `pka.open()`
 
