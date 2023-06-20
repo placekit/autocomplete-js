@@ -802,5 +802,16 @@ module.exports = (apiKey, { target = '#placekit', ...initOptions } = {}) => {
     });
   };
 
+  /**
+   * Clear device's location
+   * @memberof client
+   * @return {client}
+   */
+  client.clearGeolocation = () => {
+    pk.clearGeolocation();
+    setState({ geolocation: false });
+    return client;
+  };
+
   return client;
 };
