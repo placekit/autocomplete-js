@@ -39,11 +39,11 @@
     "format": "eslint ./src --fix"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^25.0.1",
+    "@rollup/plugin-commonjs": "^25.0.2",
     "@rollup/plugin-node-resolve": "^15.1.0",
     "@rollup/plugin-replace": "^5.0.2",
     "autoprefixer": "^10.4.14",
-    "eslint": "^8.42.0",
+    "eslint": "^8.43.0",
     "eslint-config-google": "^0.14.0",
     "npm-watch": "^0.11.0",
     "postcss": "^8.4.24",
@@ -55,7 +55,7 @@
     "rollup-plugin-postcss": "^4.0.2"
   },
   "dependencies": {
-    "@placekit/client-js": "^1.0.0",
+    "@placekit/client-js": "^1.1.0",
     "@popperjs/core": "^2.11.8"
   }
 }
