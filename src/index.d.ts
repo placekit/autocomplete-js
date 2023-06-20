@@ -29,6 +29,7 @@ export interface PKAClient {
   readonly handlers: Partial<PKAHandlers>;
   readonly state: PKAState;
   requestGeolocation(opts?: Object, cancelUpdate?: boolean): Promise<GeolocationPosition>;
+  clearGeolocation(): PKAClient;
   open(): PKAClient;
   close(): PKAClient;
   clear(): PKAClient;

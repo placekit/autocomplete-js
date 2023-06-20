@@ -12,8 +12,8 @@
 		client = placekitAutocomplete(env.PUBLIC_PLACEKIT_API_KEY, {
 			target: input,
 			countries: ['fr'],
-		}).on('state', ({ ...newState }) => {
-			state = newState; // spread to force update state with new value
+		}).on('state', (newState) => {
+			state = { ...newState }; // spread to force update state with new value
 		});
 
 		// inject initial state from client
