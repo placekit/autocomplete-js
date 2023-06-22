@@ -27,8 +27,9 @@ const isObject = (v) => typeof v === 'object' && !Array.isArray(v) && v !== null
  * @prop {string} administrative
  * @prop {string} country
  * @prop {string} countrycode
- * @prop {number} lat
- * @prop {number} lng
+ * @prop {string} coordinates // "lat,lng"
+ * @prop {number} lat // deprecated
+ * @prop {number} lng // deprecated
  * @prop {string} type
  * @prop {string[]} zipcode
  * @prop {number} population
