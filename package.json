@@ -55,7 +55,7 @@
     "rollup-plugin-postcss": "^4.0.2"
   },
   "dependencies": {
-    "@placekit/client-js": "^1.1.0",
+    "@placekit/client-js": "^1.1.1",
     "@popperjs/core": "^2.11.8"
   }
 }
