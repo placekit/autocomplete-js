@@ -19,6 +19,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@placekit/autocomplete-js": "^1.6.0"
+		"@placekit/autocomplete-js": "^1.6.1"
 	}
 }
