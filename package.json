@@ -1,6 +1,6 @@
 {
   "name": "@placekit/autocomplete-js",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "author": "PlaceKit <support@placekit.io>",
   "description": "PlaceKit Autocomplete JavaScript library",
   "license": "MIT",
@@ -55,7 +55,7 @@
     "rollup-plugin-postcss": "^4.0.2"
   },
   "dependencies": {
-    "@placekit/client-js": "^1.1.0",
+    "@placekit/client-js": "^1.1.1",
     "@popperjs/core": "^2.11.8"
   }
 }

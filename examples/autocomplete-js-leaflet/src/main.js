@@ -18,13 +18,14 @@ L.control.zoom({
 
 // set unique marker
 let marker;
-const updateMarker = (lat, lng) => {
+const updateMarker = (coords) => {
+  const [lat, lng] = coords.split(',');
   if (marker) {
     marker.setLatLng([lat, lng]);
   } else {
     marker = L.marker([lat, lng]).addTo(map);
   }
-  map.setView(marker.getLatLng(), 17);
+  map.setView(marker.getLatLng(), 16);
 };
 
 // instantiate PlaceKit Autocomplete JS
@@ -58,7 +59,7 @@ pka.on('empty', (empty) => {
 
 // add/update marker on pick/geolocation
 pka.on('pick', (_, item) => {
-  updateMarker(item.lat, item.lng);
+  updateMarker(item.coordinates);
 });
 pka.on('geolocation', (_, pos) => {
   updateMarker(pos.coords.latitude, pos.coords.longitude);
