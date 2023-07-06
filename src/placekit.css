@@ -200,8 +200,8 @@ button.pka-input-clear[aria-hidden="true"] {
 .pka-suggestions {
   container-name: pka-suggestions;
   container-type: inline-size;
-  z-index: var(--pka-z-index);
-  visibility: hidden;
+  z-index: -1;
+  opacity: 0;
   pointer-events: none;
   overflow: hidden;
   min-width: 240px;
@@ -216,7 +216,8 @@ button.pka-input-clear[aria-hidden="true"] {
 }
 
 .pka-suggestions.pka-open {
-  visibility: visible;
+  z-index: var(--pka-z-index);
+  opacity: 1;
   pointer-events: auto;
 }
 
