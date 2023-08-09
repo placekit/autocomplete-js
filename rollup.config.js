@@ -2,7 +2,6 @@ import path from 'node:path';
 
 import autoprefixer from 'autoprefixer';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
-import replace from '@rollup/plugin-replace';
 import cleanup from 'rollup-plugin-cleanup';
 import copy from 'rollup-plugin-copy';
 import postcss from 'rollup-plugin-postcss';
@@ -38,12 +37,6 @@ export default {
     },
   ],
   plugins: [
-    replace({
-      preventAssignment: true,
-      values: {
-        'process.env.NODE_ENV': '"production"',
-      }
-    }),
     nodeResolve({
       browser: true,
     }),
@@ -59,7 +52,7 @@ export default {
           banner: banner.replace(/^\/\*\!\s+(.+)\s+\*\/$/, '$1'),
           inline: true,
           important: true,
-        })
+        }),
       ],
     }),
     copy({
