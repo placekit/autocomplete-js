@@ -41,6 +41,7 @@ export default function placekitAutocomplete(
     dirty: false,
     freeForm: true,
     geolocation: false,
+    countryMode: false,
   };
 
   // default options
@@ -210,7 +211,7 @@ export default function placekitAutocomplete(
     const current = children[index];
     if (!current) return;
     const item = suggestions[index];
-    if (countryMode.checked) {
+    if (state.countryMode) {
       setCountry(item);
       toggleCountryMode(false);
     } else {
@@ -238,11 +239,13 @@ export default function placekitAutocomplete(
       freeForm: true,
     });
     loading.setAttribute('aria-hidden', false);
-    await detectCountry();
+    if (!countryMode.disabled) {
+      await detectCountry();
+    }
     pk.search(query, {
-      countryByIP: false,
+      countryByIP: state.countryMode,
       countries: !!country ? [country.countrycode] : options.countries,
-      types: countryMode.checked ? ['country'] : options.types,
+      types: state.countryMode ? ['country'] : options.types,
     }).then(({ results }) => {
       loading.setAttribute('aria-hidden', true);
       if (input.value !== query) return; // skip outdated
@@ -279,13 +282,15 @@ export default function placekitAutocomplete(
       <span class="pka-panel-country-label">${country.name}</span>
       ${options.format.icon('switch')}
     `;
+    fireEvent('countryChange', country);
   }
 
   // toggle country mode: search in countries
   function toggleCountryMode(bool) {
     countryMode.checked = !countryMode.disabled &&
       (typeof bool === 'undefined' ? !countryMode.checked : bool);
-    if (countryMode.checked) {
+    setState({ countryMode: countryMode.checked });
+    if (state.countryMode) {
       backupValue = input.value;
       setValue(country.name);
       input.select();
@@ -299,7 +304,7 @@ export default function placekitAutocomplete(
 
   // detect country
   function detectCountry() {
-    return !!country || countryMode.disabled ? Promise.resolve(country) : pk.reverse({
+    return !!country ? Promise.resolve(country) : pk.reverse({
       countryByIP: true,
       maxResults: 1,
       types: ['country'],
@@ -351,7 +356,7 @@ export default function placekitAutocomplete(
   // update suggestions as user types
   function handleInput(e) {
     if (e instanceof InputEvent) {
-      togglePanel(!!input.value.trim());
+      togglePanel(!!input.value.trim() || state.countryMode);
       search();
     }
   }
@@ -364,7 +369,7 @@ export default function placekitAutocomplete(
       togglePanel(true);
       search();
     } else {
-      togglePanel(!!input.value || state.geolocation);
+      togglePanel(!!input.value.trim() || state.geolocation || state.countryMode);
     }
   }
   input.addEventListener('click', handleFocus);
@@ -415,7 +420,7 @@ export default function placekitAutocomplete(
         case 'Escape':
           if (isPanelOpen) {
             e.preventDefault();
-            if (countryMode.checked) {
+            if (state.countryMode) {
               toggleCountryMode(false);
             } else {
               togglePanel(false);
@@ -482,10 +487,11 @@ export default function placekitAutocomplete(
     });
 
     // show country select
-    countryMode.disabled = options.countries || !options.countrySelect;
+    const onlyCountryType = JSON.stringify(options.types) === '["country"]';
+    countryMode.disabled = options.countries || !options.countrySelect || onlyCountryType;
 
     // detect current country and inject into input as default value if type is ['country']
-    if (options.countryAutoFill && JSON.stringify(options.types) === '["country"]' && !state.dirty && !input.value.trim()) {
+    if (options.countryAutoFill && onlyCountryType && !state.dirty && !input.value.trim()) {
       detectCountry().then((item) => {
         setValue(item.name, {
           notify: true,
