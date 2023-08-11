@@ -54,17 +54,15 @@ export default function placekitAutocomplete(
     format: {
       flag: (countrycode) => `<img class="pka-flag" src="https://flagcdn.com/64x48/${countrycode?.toLowerCase()}.png" alt="${countrycode}" loading="lazy" />`,
       icon: (name, label) => `<span class="pka-icon pka-icon-${name}" role="img" aria-label="${label || 'icon'}"></span>`,
-      suggestionName: (item) => item.highlight,
-      suggestionSub: (item) => item.type === 'country' ? '' : [
-        (item.type === 'city' ? item.zipcode.sort()[0] : item.city),
-        item.county
-      ].filter((a) => a).join(item.type === 'city' ? ' ' : ', '),
+      sub: (item) => item.type === 'country' ? '' : item.type === 'city' ?
+        [item.zipcode.sort()[0], item.country].filter((s) => s).join(' ') :
+        [item.city, item.county].filter((s) => s).join(', '),
       noResults: (query) => `No results for ${query}`,
       value: (item) => item.name,
       applySuggestion: 'Apply suggestion',
       cancel: 'Cancel',
     },
-    countryDetect: false,
+    countryAutoFill: true,
     countrySelect: true,
   };
 
@@ -246,14 +244,15 @@ export default function placekitAutocomplete(
       countries: !!country ? [country.countrycode] : options.countries,
       types: countryMode.checked ? ['country'] : options.types,
     }).then(({ results }) => {
-      suggestions = results;
       loading.setAttribute('aria-hidden', true);
+      if (input.value !== query) return; // skip outdated
+      suggestions = results;
       suggestionsList.innerHTML = results.length > 0 ? results.map((item) => `
         <div class="pka-panel-suggestion" role="option" tabindex="-1" aria-selected="false">
           ${item.type === 'country' ? options.format.flag(item.countrycode) : options.format.icon(item.type || 'pin', item.type)}
           <span class="pka-panel-suggestion-label">
-            <span class="pka-panel-suggestion-label-name">${options.format.suggestionName(item)}</span>
-            <span class="pka-panel-suggestion-label-sub">${options.format.suggestionSub(item)}</span>
+            <span class="pka-panel-suggestion-label-name">${item.highlight}</span>
+            <span class="pka-panel-suggestion-label-sub">${options.format.sub(item)}</span>
           </span>
           <button type="button" class="pka-panel-suggestion-action" aria-label="${options.format.applySuggestion}" />
         </div>
@@ -416,8 +415,12 @@ export default function placekitAutocomplete(
         case 'Escape':
           if (isPanelOpen) {
             e.preventDefault();
-            togglePanel(false);
-            restoreValue(true);
+            if (countryMode.checked) {
+              toggleCountryMode(false);
+            } else {
+              togglePanel(false);
+              restoreValue(true);
+            }
           }
           break;
         case 'Tab':
@@ -451,7 +454,6 @@ export default function placekitAutocomplete(
     const {
       panel: panelOptions,
       format: formatOptions,
-      countryDetect,
       countrySelect,
       ...pkOptions
     } = merge(options, opts);
@@ -479,20 +481,18 @@ export default function placekitAutocomplete(
       ],
     });
 
-    // show country select and detect current country
+    // show country select
     countryMode.disabled = options.countries || !options.countrySelect;
 
-    // inject current country into input if types is ['country'] and input untouched
-    if (options.countryDetect) {
+    // detect current country and inject into input as default value if type is ['country']
+    if (options.countryAutoFill && JSON.stringify(options.types) === '["country"]' && !state.dirty && !input.value.trim()) {
       detectCountry().then((item) => {
-        if (JSON.stringify(options.types) === '["country"]' && !state.dirty && !input.value.trim()) {
-          setValue(item.name, {
-            notify: true,
-            focus: false,
-          });
-          setState({ freeForm: false });
-          fireEvent('pick', item.name, item, 0);
-        }
+        setValue(item.name, {
+          notify: true,
+          focus: false,
+        });
+        setState({ freeForm: false });
+        fireEvent('pick', item.name, item, 0);
       });
     }
   }
