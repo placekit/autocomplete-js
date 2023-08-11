@@ -276,13 +276,15 @@ export default function placekitAutocomplete(
 
   // update current country
   function setCountry(item) {
-    country = item;
-    panel.querySelector('.pka-panel-country-open').innerHTML = country === null ? '' : `
-      ${options.format.flag(country.countrycode)}
-      <span class="pka-panel-country-label">${country.name}</span>
+    panel.querySelector('.pka-panel-country-open').innerHTML = item === null ? '' : `
+      ${options.format.flag(item.countrycode)}
+      <span class="pka-panel-country-label">${item.name}</span>
       ${options.format.icon('switch')}
     `;
-    fireEvent('countryChange', country);
+    if (item.countrycode !== country.countrycode) {
+      country = item;
+      fireEvent('countryChange', country);
+    }
   }
 
   // toggle country mode: search in countries
