@@ -167,7 +167,7 @@ console.log(pka.options); // { "target": <input ... />, "language": "en", "maxRe
 | `countries` | JS client | `string[]?` | `undefined` | Restrict search in specific countries. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes<sup>[(1)](#ft1)</sup>. |
 | `coordinates` | JS client | `string?` | `undefined` | Coordinates to search around. Automatically set when calling [`pka.requestGeolocation()`](#pkarequestgeolocation). |
 
-<a id="ft1"><b>[1]</b></a>: See [Scope and Limitations](https://placekit.io/terms/scope) for more details.
+<a id="ft1"><b>[1]</b></a>: See [Coverage](https://placekit.io/terms/coverage) for more details.
 
 <details>
 <summary><h4 id="panel-options">Panel options</h4></summary>
@@ -180,7 +180,6 @@ console.log(pka.options); // { "target": <input ... />, "language": "en", "maxRe
 | `flip` | `boolean` | `false` | Flip position top when overflowing. |
 
 </details>
-
 <details>
 <summary><h4 id="format-options">Format options</h4></summary>
 
