@@ -281,7 +281,7 @@ export default function placekitAutocomplete(
       <span class="pka-panel-country-label">${item.name}</span>
       ${options.format.icon('switch')}
     `;
-    if (item.countrycode !== country.countrycode) {
+    if (item?.countrycode !== country?.countrycode) {
       country = item;
       fireEvent('countryChange', country);
     }
@@ -461,6 +461,7 @@ export default function placekitAutocomplete(
     const {
       panel: panelOptions,
       format: formatOptions,
+      countryAutoFill,
       countrySelect,
       ...pkOptions
     } = merge(options, opts);
