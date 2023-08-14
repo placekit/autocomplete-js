@@ -246,6 +246,7 @@ export default function placekitAutocomplete(
       countryByIP: state.countryMode,
       countries: !!country ? [country.countrycode] : options.countries,
       types: state.countryMode ? ['country'] : options.types,
+      maxResults: Math.max(state.countryMode ? 3 : 1, options.maxResults),
     }).then(({ results }) => {
       loading.setAttribute('aria-hidden', true);
       if (input.value !== query) return; // skip outdated
@@ -304,7 +305,7 @@ export default function placekitAutocomplete(
     }
   }
 
-  // detect country
+  // detect current country with IP
   function detectCountry() {
     return !!country ? Promise.resolve(country) : pk.reverse({
       countryByIP: true,
