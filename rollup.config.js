@@ -16,7 +16,7 @@ const banner = [
 ].join(' | ');
 
 export default {
-  input: 'src/index.js',
+  input: 'src/placekit-autocomplete.js',
   output: [
     {
       file: pkg.module,
@@ -58,7 +58,7 @@ export default {
     copy({
       targets: [
         {
-          src: 'src/index.d.ts',
+          src: 'src/placekit-autocomplete.d.ts',
           dest: path.dirname(pkg.types),
           rename: path.basename(pkg.types),
           transform: (content) => [banner, content].join("\n"),

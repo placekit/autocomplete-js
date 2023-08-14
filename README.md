@@ -186,10 +186,10 @@ console.log(pka.options); // { "target": <input ... />, "language": "en", "maxRe
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `flag` | `(countrycode: string) => string` | [see index.js](./src/index.js#L56) | DOM for flags. |
-| `icon` | `(name: string, label: string) => string` | [see index.js](./src/index.js#L57) | DOM for icons. |
-| `sub` | `(item: object) => string` | [see index.js](./src/index.js#L58-L60) | Format suggestion secondary text |
-| `noResults` | `(query: string) => string` | [see index.js](./src/index.js#L61) | Format "no results" text. |
+| `flag` | `(countrycode: string) => string` | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L56) | DOM for flags. |
+| `icon` | `(name: string, label: string) => string` | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L57) | DOM for icons. |
+| `sub` | `(item: object) => string` | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L58-L60) | Format suggestion secondary text |
+| `noResults` | `(query: string) => string` | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L61) | Format "no results" text. |
 | `value` | `(item: object) => string` | `item.name` | Format input value when user picks a suggestion. |
 
 </details>

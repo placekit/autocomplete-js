@@ -1,7 +1,7 @@
 import placekit from '@placekit/client-js/lite';
 import { createPopper } from '@popperjs/core';
 
-import './placekit.css'; // removed at build time
+import './placekit-autocomplete.css'; // removed at build time
 
 // generic helpers
 const isString = (v) => Object.prototype.toString.call(v) === '[object String]';

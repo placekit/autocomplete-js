@@ -1,6 +1,6 @@
 {
   "name": "@placekit/autocomplete-js",
-  "version": "1.6.1",
+  "version": "2.0.0",
   "author": "PlaceKit <support@placekit.io>",
   "description": "PlaceKit Autocomplete JavaScript library",
   "license": "MIT",
@@ -40,16 +40,16 @@
     "format": "eslint ./src --fix"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^25.0.3",
+    "@rollup/plugin-commonjs": "^25.0.4",
     "@rollup/plugin-node-resolve": "^15.1.0",
-    "autoprefixer": "^10.4.14",
-    "eslint": "^8.46.0",
+    "autoprefixer": "^10.4.15",
+    "eslint": "^8.47.0",
     "eslint-config-google": "^0.14.0",
     "npm-watch": "^0.11.0",
     "postcss": "^8.4.27",
     "postcss-banner": "^4.0.1",
     "rimraf": "^5.0.1",
-    "rollup": "^3.27.0",
+    "rollup": "^3.28.0",
     "rollup-plugin-cleanup": "^3.2.1",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-postcss": "^4.0.2"
