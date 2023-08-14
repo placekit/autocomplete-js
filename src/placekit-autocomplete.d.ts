@@ -10,6 +10,7 @@ export type PKAState = {
   empty: boolean;
   freeForm: boolean;
   geolocation: boolean;
+  countryMode: boolean;
 };
 
 export interface PKAClient {
@@ -25,7 +26,9 @@ export interface PKAClient {
   on(event: 'empty', handler?: PKAHandlers['empty']): PKAClient;
   on(event: 'freeForm', handler?: PKAHandlers['freeForm']): PKAClient;
   on(event: 'geolocation', handler?: PKAHandlers['geolocation']): PKAClient;
+  on(event: 'countryMode', handler?: PKAHandlers['countryMode']): PKAClient;
   on(event: 'state', handler?: PKAHandlers['state']): PKAClient;
+  on(event: 'countryChange', handler?: PKAHandlers['countryChange']): PKAClient;
   readonly handlers: Partial<PKAHandlers>;
   readonly state: PKAState;
   requestGeolocation(opts?: Object, cancelUpdate?: boolean): Promise<GeolocationPosition>;
@@ -47,17 +50,28 @@ export type PKAHandlers = {
   empty: (bool: boolean) => void;
   freeForm: (bool: boolean) => void;
   geolocation: (bool: boolean, position?: GeolocationPosition) => void;
+  countryMode: (bool: boolean) => void;
   state: (state: PKAState) => void;
+  countryChange: (item: PKResult) => void;
 };
 
 export type PKAOptions = PKOptions & {
   target: string | HTMLInputElement;
-  offset?: number;
-  template?: (item: PKResult) => string;
-  formatValue?: (item: PKResult) => string;
-  noResults?: string | ((query: string) => string);
-  strategy?: 'absolute' | 'fixed';
-  flip?: boolean;
+  panel?: {
+    className?: string;
+    offset?: number;
+    strategy?: 'absolute' | 'fixed';
+    flip?: boolean;
+  };
+  format?: {
+    flag?: (countrycode: string) => string;
+    icon?: (name: string, label?: string) => string;
+    sub?: (item: PKResult) => string;
+    noResults?: (query: string) => string;
+    value?: (item: PKResult) => string;
+    applySuggestion?: string;
+    cancel?: string;
+  };
   countryAutoFill?: boolean;
-  className?: string;
+  countrySelect?: boolean;
 };

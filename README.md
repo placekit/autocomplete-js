@@ -191,6 +191,8 @@ console.log(pka.options); // { "target": <input ... />, "language": "en", "maxRe
 | `sub` | `(item: object) => string` | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L58-L60) | Format suggestion secondary text |
 | `noResults` | `(query: string) => string` | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L61) | Format "no results" text. |
 | `value` | `(item: object) => string` | `item.name` | Format input value when user picks a suggestion. |
+| `applySuggestion` | `string` | `"Apply suggestion"` | ARIA label for "insert" icon. |
+| `cancel` | `string` | `"Cancel"` | Label for cancelling country selection mode. |
 
 </details>
 
@@ -235,7 +237,7 @@ console.log(pka.state.freeForm); // true or false
 // `true` if device geolocation has been granted.
 console.log(pka.state.geolocation); // true or false
 
-// `true` if panel is in country selector mode.
+// `true` if panel is in country selection mode.
 console.log(pka.state.countryMode); // true or false
 ```
 
@@ -339,7 +341,7 @@ Triggered when `state.geolocation` value changes (a.k.a. when `pka.requestGeoloc
 
 ##### `countryMode`
 
-Triggered when the user toggles the country selector mode. Always `false` if `countries` option is set, or if `countrySelect` is `false`.
+Triggered when the user toggles the country selection mode. Always `false` if `countries` option is set, or if `countrySelect` is `false`.
 
 | Parameter | Type | Description |
 | --- | --- | --- |
@@ -355,7 +357,7 @@ Triggered when one of the input states changes.
 
 ##### `countryChange`
 
-Triggered when the current search country changes (either detected by IP, or selected by the user in the country selector mode).
+Triggered when the current search country changes (either detected by IP, or selected by the user in the country selection mode).
 
 | Parameter | Type | Description |
 | --- | --- | --- |
