@@ -1,15 +1,13 @@
-const path = require('path');
+import path from 'node:path';
 
-const autoprefixer = require('autoprefixer');
-const commonjs = require('@rollup/plugin-commonjs');
-const { nodeResolve } = require('@rollup/plugin-node-resolve');
-const replace = require('@rollup/plugin-replace');
-const cleanup = require('rollup-plugin-cleanup');
-const copy = require('rollup-plugin-copy');
-const postcss = require('rollup-plugin-postcss');
-const postcssBanner = require('postcss-banner');
+import autoprefixer from 'autoprefixer';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
+import cleanup from 'rollup-plugin-cleanup';
+import copy from 'rollup-plugin-copy';
+import postcss from 'rollup-plugin-postcss';
+import postcssBanner from 'postcss-banner';
 
-const pkg = require('./package.json');
+import pkg from './package.json' assert { type: 'json' };
 const banner = [
   `/*! ${pkg.name} v${pkg.version}`,
   '© placekit.io',
@@ -17,8 +15,8 @@ const banner = [
   `${pkg.homepage} */`,
 ].join(' | ');
 
-module.exports = {
-  input: 'src/index.js',
+export default {
+  input: 'src/placekit-autocomplete.js',
   output: [
     {
       file: pkg.module,
@@ -39,17 +37,12 @@ module.exports = {
     },
   ],
   plugins: [
-    replace({
-      preventAssignment: true,
-      values: {
-        'process.env.NODE_ENV': '"production"',
-      }
-    }),
     nodeResolve({
       browser: true,
     }),
-    commonjs(),
-    cleanup(),
+    cleanup({
+      comments: 'none',
+    }),
     postcss({
       extract: path.resolve('./dist/placekit-autocomplete.css'),
       minimize: false,
@@ -59,13 +52,13 @@ module.exports = {
           banner: banner.replace(/^\/\*\!\s+(.+)\s+\*\/$/, '$1'),
           inline: true,
           important: true,
-        })
+        }),
       ],
     }),
     copy({
       targets: [
         {
-          src: 'src/index.d.ts',
+          src: 'src/placekit-autocomplete.d.ts',
           dest: path.dirname(pkg.types),
           rename: path.basename(pkg.types),
           transform: (content) => [banner, content].join("\n"),

@@ -46,8 +46,8 @@ For React implementations, check our [PlaceKit Autocomplete React](https://githu
 First, import the library and the default stylesheet into the `<head>` tag in your HTML:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.6.1/dist/placekit-autocomplete.min.css" />
-<script src="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.6.1"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@2.0.0/dist/placekit-autocomplete.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@2.0.0"></script>
 ```
 
 After importing the library, `placekitAutocomplete` becomes available as a global:
@@ -57,7 +57,6 @@ After importing the library, `placekitAutocomplete` becomes available as a globa
 <script>
   const pka = placekitAutocomplete('<your-api-key>', {
     target: '#placekit',
-    countries: ['fr'],
     // other options...
   });
 </script>
@@ -67,7 +66,7 @@ Or if you are using native ES Modules:
 
 ```html
 <script type="module">
-  import placekit from 'https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@1.6.1/dist/placekit-autocomplete.esm.js';
+  import placekitAutocomplete from 'https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@2.0.0/dist/placekit-autocomplete.esm.js';
   const pka = placekitAutocomplete(/* ... */);
   // ...
 </script>
@@ -94,7 +93,6 @@ import placekit from '@placekit/autocomplete-js';
 
 const pka = placekitAutocomplete('<your-api-key>', {
   target: '#placekit',
-  countries: ['fr'],
   // other options...
 });
 ```
@@ -106,15 +104,15 @@ If you have trouble importing CSS from `node_modules`, copy/paste [its content](
 
 ## 🧰 Reference
 
-- [`placekitAutocomplete()`](#placekitAutocomplete)
+- [`placekitAutocomplete()`](#placekitautocomplete)
 - [`pka.input`](#pkainput)
 - [`pka.options`](#pkaoptions)
 - [`pka.configure()`](#pkaconfigure)
 - [`pka.state`](#pkastate)
 - [`pka.on()`](#pkaon)
 - [`pka.handlers`](#pkahandlers)
-- [`pka.requestGeolocation()`](#pkarequestGeolocation)
-- [`pka.clearGeolocation()`](#pkaclearGeolocation)
+- [`pka.requestGeolocation()`](#pkarequestgeolocation)
+- [`pka.clearGeolocation()`](#pkacleargeolocation)
 - [`pka.open()`](#pkaopen)
 - [`pka.close()`](#pkaclose)
 - [`pka.clear()`](#pkaclear)
@@ -159,59 +157,43 @@ console.log(pka.options); // { "target": <input ... />, "language": "en", "maxRe
 | Option | From | Type | Default | Description |
 | --- | --- | --- | --- | --- |
 | `target` | AutoComplete | `string\|Element` | `-` | Target input element or (unique) selector. |
-| `offset` | AutoComplete | `integer` | `4` | Gap between input and suggestions list in pixels. |
-| `template` | AutoComplete | `(item: object) => string` | [see index.js](./src/index.js#L92-L107) | Suggestion item formatting function. |
-| `formatValue` | AutoComplete | `(item: object) => string` | [see index.js](./src/index.js#L108) | Input value formatting function when selected from list. |
-| `noResults` | AutoComplete | `string\|(query: string) => string` | [see index.js](./src/index.js#L109-L114) | No result template. |
-| `strategy` | AutoComplete | `'absolute' \| 'fixed'` | `absolute` | [Popper positioning strategy](https://popper.js.org/docs/v2/constructors/#strategy) |
-| `flip` | AutoComplete | `boolean` | `false` | Flip position top when overflowing. |
-| [`countryAutoFill`](#countryautofill-option) | Autocomplete | `boolean?` | `false` | Autofill current country by IP when `types: ['country']`. |
-| `className` | AutoComplete | `string` | `undefined` | Additional suggestions panel CSS class(es). |
+| `panel` | AutoComplete | `object?` | `(...)` | Suggestions panel options, see [Panel options](#panel-options). |
+| `format` | AutoComplete | `object?` | `(...)` | Formatting options, see [Format options](#format-options). |
+| `countryAutoFill` | AutoComplete | `boolean?` | `true` | Automatically detect current country by IP and fill input when `types: ['country']`. |
+| `countrySelect` | AutoComplete | `boolean?` | `true` | Show country selector when `countries` is not defined. |
 | `maxResults` | JS client | `integer` | `5` | Number of results per page. |
 | `language` | JS client | `string?` | `undefined` | Preferred language for the results<sup>[(1)](#ft1)</sup>, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. Supported languages are `en` and `fr`. By default the results are displayed in their country's language. |
 | `types` | JS client | `string[]?` | `undefined` | Type of results to show. Array of accepted values: `street`, `city`, `country`, `airport`, `bus`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all. |
-| [`countries`](#%EF%B8%8F-countries-option-is-required) | JS client | `string[]?` | `undefined` | Countries to search in, or fallback to if `countryByIP` is `true`. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes<sup>[(1)](#ft1)</sup>. |
-| [`countryByIP`](#countryByIP-option) | JS client | `boolean?` | `undefined` | Use IP to find user's country (turned off). |
-| `coordinates` | JS client | `string?` | `undefined` | Coordinates to search around. Automatically set when calling [`pka.requestGeolocation()`](#pkarequestGeolocation). |
+| `countries` | JS client | `string[]?` | `undefined` | Restrict search in specific countries. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes<sup>[(1)](#ft1)</sup>. |
+| `coordinates` | JS client | `string?` | `undefined` | Coordinates to search around. Automatically set when calling [`pka.requestGeolocation()`](#pkarequestgeolocation). |
 
-<a id="ft1"><b>[1]</b></a>: See [Scope and Limitations](https://placekit.io/terms/scope) for more details.
+<a id="ft1"><b>[1]</b></a>: See [Coverage](https://placekit.io/terms/coverage) for more details.
 
-#### ⚠️ `countries` option is required
+<details>
+<summary><h4 id="panel-options">Panel options</h4></summary>
 
-The `countries` option is **required** at search time, but we like to keep it optional across all methods so developers remain free on when and how to define it: 
-- either when instanciating with `placekit()`,
-- with `pk.configure()`,
-- or at search time with `pk.search()`.
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `className` | `string` | `undefined` | Additional panel CSS class(es). |
+| `offset` | `integer` | `4` | Gap between input and panel in pixels. |
+| `strategy` | `'absolute' \| 'fixed'` | `absolute` | [Popper positioning strategy](https://popper.js.org/docs/v2/constructors/#strategy) |
+| `flip` | `boolean` | `false` | Flip position top when overflowing. |
 
-If `countries` is missing or invalid, you'll get a `422` error, excepted when`types` option is set to `['country']` only.
+</details>
+<details>
+<summary><h4 id="format-options">Format options</h4></summary>
 
-#### `countryByIP` option
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `flag` | `(countrycode: string) => string` | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L56) | DOM for flags. |
+| `icon` | `(name: string, label: string) => string` | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L57) | DOM for icons. |
+| `sub` | `(item: object) => string` | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L58-L60) | Format suggestion secondary text |
+| `noResults` | `(query: string) => string` | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L61) | Format "no results" text. |
+| `value` | `(item: object) => string` | `item.name` | Format input value when user picks a suggestion. |
+| `applySuggestion` | `string` | `"Apply suggestion"` | ARIA label for "insert" icon. |
+| `cancel` | `string` | `"Cancel"` | Label for cancelling country selection mode. |
 
-Set `countryByIP` to `true` when you don't know which country users will search addresses in. In that case, the option `countries` will be used as a fallback if the user's country is not supported:
-
-```js
-pka.configure({
-  countryByIP: true, // use user's country, based on their IP
-  countries: ['fr', 'be'], // returning results from France and Belgium if user's country is not supported
-});
-```
-
-#### `countryAutoFill` option
-
-When making a country-only autocomplete field, this option enhances the experience by automatically filling the input detected with the user's IP.
-It works only when `types` option is set **only** with the `conutry` value:
-
-```js
-const pka = placekitAutocomplete('<your-api-key>', {
-  target: '#placekit',
-  types: ['country'],
-  countryAutoFill: true,
-});
-```
-
-⚠️ **It makes an automatic call to the PlaceKit API and therefore counts as billable usage.**
-
-See our [country field example](./example/autocomplete-js-country).
+</details>
 
 ### `pka.configure()`
 
@@ -219,9 +201,13 @@ Updates all parameters (**except `target`**). Returns the instance so you can ch
 
 ```js
 pka.configure({
-  className: 'my-suggestions',
-  flip: true,
-  formatValue: (item) => `${item.name} ${item.city}`,
+  panel: {
+    className: 'my-suggestions',
+    flip: true,
+  },
+  format: {
+    value: (item) => `${item.name} ${item.city}`,
+  },
   language: 'fr',
   maxResults: 5,
 });
@@ -249,6 +235,9 @@ console.log(pka.state.freeForm); // true or false
 
 // `true` if device geolocation has been granted.
 console.log(pka.state.geolocation); // true or false
+
+// `true` if panel is in country selection mode.
+console.log(pka.state.countryMode); // true or false
 ```
 
 The `freeForm` value comes handy if you need to implement a strict validation of the address, but we don't interfere with how to implement it as input validation is always very specific to the project's stack.
@@ -267,7 +256,9 @@ pka.on('open', () => {})
   .on('empty', (bool) => {})
   .on('freeForm', (bool) => {})
   .on('geolocation', (bool, position) => {});
+  .on('countryMode', (bool) => {});
   .on('state', (state) => {})
+  .on('countryChange', (item) => {});
 ```
 
 If you register a same event twice, the first one will be replaced.
@@ -347,6 +338,14 @@ Triggered when `state.geolocation` value changes (a.k.a. when `pka.requestGeoloc
 | `geolocation` | `boolean` | `true` if granted, `false` if denied. |
 | `position` | [`GeolocationPosition \| undefined`](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition) | Passed when `geolocation` is `true`. |
 
+##### `countryMode`
+
+Triggered when the user toggles the country selection mode. Always `false` if `countries` option is set, or if `countrySelect` is `false`.
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `bool` | `boolean` | `true` if open, `false` if closed. |
+
 ##### `state`
 
 Triggered when one of the input states changes.
@@ -354,6 +353,14 @@ Triggered when one of the input states changes.
 | Parameter | Type | Description |
 | --- | --- | --- |
 | `state` | `object` | The current input state. |
+
+##### `countryChange`
+
+Triggered when the current search country changes (either detected by IP, or selected by the user in the country selection mode).
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `item` | `object` | Country details returned from API. |
 
 ### `pka.handlers`
 
@@ -443,7 +450,7 @@ pka.destroy();
 You have full control over the input element as PlaceKit Autocomplete doesn't style nor alter it by default.
 We still provide a style that you can apply by adding the `.pka-input` class to your input element.
 
-Colors, border-radius, font and overall scale (in `rem`) are accessible over variables:
+Colors, border-radius, font and overall scale (in `rem`) and even icons are accessible over variables:
 
 ```css
 :root {
@@ -458,6 +465,24 @@ Colors, border-radius, font and overall scale (in `rem`) are accessible over var
   --pka-border-radius: 6px;
   --pka-font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   --pka-z-index: 9999;
+
+  --pka-icon-pin: url("...");
+  --pka-icon-street: var(--pka-icon-pin);
+  --pka-icon-city: url("...");
+  --pka-icon-airport: url("...");
+  --pka-icon-bus: url("...");
+  --pka-icon-train: url("...");
+  --pka-icon-townhall: url("...");
+  --pka-icon-tourism: url("...");
+  --pka-icon-noresults: url("...");
+  --pka-icon-clear: url("...");
+  --pka-icon-cancel: var(--pka-icon-clear);
+  --pka-icon-insert: url("...");
+  --pka-icon-check: url("...");
+  --pka-icon-switch: url("...");
+  --pka-icon-geo-off: url("...");
+  --pka-icon-geo-on: url("...");
+  --pka-icon-loading: url("...");
 }
 
 /* dark mode overrides */
@@ -466,6 +491,8 @@ body[data-theme="dark"] {
   --pka-color-accent: 55, 131, 249;
 }
 ```
+
+You also have full control over flags and icons DOM with `format.flag` and `format.icon` options (see [Format options](#format-options)).
 
 For advanced customization, refer to our [stylesheet](./src/placekit.css) to learn about the available classes if you need to either override some or start a theme from scratch.
 

@@ -9,7 +9,11 @@
   "ignorePatterns": [
     "*.test.js"
   ],
+  "parserOptions": {
+    "sourceType": "module"
+  },
   "rules": {
+    "require-jsdoc": 0,
     "comma-dangle": [
       "error",
       "only-multiline"
