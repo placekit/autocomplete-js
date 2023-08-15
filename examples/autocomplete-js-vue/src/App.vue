@@ -53,7 +53,6 @@ export default {
   mounted() {
     this.client = placekitAutocomplete(import.meta.env.VITE_PLACEKIT_API_KEY, {
       target: this.$refs.input,
-      countries: ['fr'],
     })
       .on('state', (state) => {
         this.state = { ...state }; // spread to force update state with new value

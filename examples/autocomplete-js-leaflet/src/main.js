@@ -31,7 +31,6 @@ const updateMarker = (coords) => {
 // instantiate PlaceKit Autocomplete JS
 const pka = placekitAutocomplete(import.meta.env.VITE_PLACEKIT_API_KEY, {
   target: '#placekit-input',
-  countries: ['fr'],
 });
 
 // request geolocation on click

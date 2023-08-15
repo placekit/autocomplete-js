@@ -32,7 +32,7 @@ For React implementations, check our [PlaceKit Autocomplete React](https://githu
 
 ## ✨ Features
 
-- **Standalone** and **lightweight**: about 14kb of JS, and 4kb of CSS, gzipped
+- **Standalone** and **lightweight**: about 14kb of JS, and 5kb of CSS, gzipped
 - **Cross browser**: compatible across all major modern browsers
 - **Non-invasive**: use and style your own input element
 - **Customizable** and **extensible** with events and hooks

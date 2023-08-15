@@ -2,7 +2,7 @@
 
 [![Open in CodeSandbox](https://img.shields.io/badge/Open%20in-CodeSandbox-blue?style=flat-square&logo=codesandbox)](https://githubbox.com/placekit/autocomplete-js/tree/main/examples/autocomplete-js-country)
 
-Make a country selector field with autocomplete JS, and automaitcally fill the current user's country (based on IP).
+Make a country selector field with autocomplete JS, and automatically fill the current user's country (based on IP).
 
 Only using [TailwindCSS](https://tailwindcss.com) as a convenience for the basic styling of the example.
 

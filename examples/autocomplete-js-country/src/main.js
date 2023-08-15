@@ -7,7 +7,7 @@ import '@placekit/autocomplete-js/dist/placekit-autocomplete.css';
 const pka = placekitAutocomplete(import.meta.env.VITE_PLACEKIT_API_KEY, {
   target: '#placekit-input',
   types: ['country'],
-  countryAutoFill: true,
+  // countryAutoFill: false, // uncomment to prevent automatic country detection
 });
 
 // clear input on click
