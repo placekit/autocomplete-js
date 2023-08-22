@@ -489,6 +489,7 @@ body[data-theme="dark"] .pka-panel-footer {
 .pka-panel-country {
   flex: 1;
   color: rgb(var(--pka-color-dark));
+  max-width: calc(100% - var(--pka-scale) * 7);
 }
 
 @media (hover: hover) and (pointer: fine) {
