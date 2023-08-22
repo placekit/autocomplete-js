@@ -324,7 +324,11 @@ export default function placekitAutocomplete(
   // Event handlers
   // ----------------------------------------
   // JS-handled hover state
+  let touchEvent;
+  panel.addEventListener('touchstart', () => touchEvent = true);
+  panel.addEventListener('end', () => touchEvent = true);
   panel.addEventListener('mouseover', (e) => {
+    if (touchEvent) return;
     clearActive();
     e.target.closest('[role="option"]')?.classList.add('pka-active');
   });

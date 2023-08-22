@@ -212,19 +212,24 @@ button.pka-input-clear {
   mask-image: var(--pka-icon-clear);
 }
 
-button.pka-input-geolocation:hover,
-button.pka-input-clear:hover {
-  background-color: rgb(var(--pka-color-black));
+@media (hover: hover) and (pointer: fine) {
+  button.pka-input-geolocation:hover,
+  button.pka-input-clear:hover {
+    background-color: rgb(var(--pka-color-black));
+  }
+
+  body.dark button.pka-input-geolocation:hover,
+  body.dark button.pka-input-clear:hover,
+  body[data-theme="dark"] button.pka-input-geolocation:hover,
+  body[data-theme="dark"] button.pka-input-clear:hover {
+    background-color: rgb(var(--pka-color-white));
+  }
+
+  button.pka-input-geolocation:hover {
+    mask-image: var(--pka-icon-geo-on);
+  }
 }
 
-body.dark button.pka-input-geolocation:hover,
-body.dark button.pka-input-clear:hover,
-body[data-theme="dark"] button.pka-input-geolocation:hover,
-body[data-theme="dark"] button.pka-input-clear:hover {
-  background-color: rgb(var(--pka-color-white));
-}
-
-button.pka-input-geolocation:hover,
 button.pka-input-geolocation.pka-enabled {
   mask-image: var(--pka-icon-geo-on);
 }
@@ -332,6 +337,7 @@ body[data-theme="dark"] .pka-panel {
   align-items: center;
   gap: .625em;
   padding: .375em .625em;
+  min-height: 2.5rem;
 }
 
 @container pka-panel (min-width: 420px) {
@@ -446,7 +452,12 @@ button.pka-panel-suggestion-action {
   opacity: 1;
 }
 
-.pka-panel-suggestion.pka-active button.pka-panel-suggestion-action:hover,
+@media (hover: hover) and (pointer: fine) {
+  .pka-panel-suggestion.pka-active button.pka-panel-suggestion-action:hover {
+    background-color: rgb(var(--pka-color-white));
+  }
+}
+
 .pka-panel-suggestion.pka-active.pka-selected button.pka-panel-suggestion-action {
   background-color: rgb(var(--pka-color-white));
 }
@@ -478,10 +489,13 @@ body[data-theme="dark"] .pka-panel-footer {
 .pka-panel-country {
   flex: 1;
   color: rgb(var(--pka-color-dark));
+  max-width: calc(100% - var(--pka-scale) * 7);
 }
 
-.pka-panel-country:hover {
-  color: rgb(var(--pka-color-accent));
+@media (hover: hover) and (pointer: fine) {
+  .pka-panel-country:hover {
+    color: rgb(var(--pka-color-accent));
+  }
 }
 
 .pka-panel-country-open,
