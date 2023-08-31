@@ -258,7 +258,7 @@ export default function placekitAutocomplete(
       countryByIP: state.countryMode,
       countries: !!country ? [country.countrycode] : options.countries,
       types: state.countryMode ? ['country'] : options.types,
-      maxResults: Math.max(state.countryMode ? 3 : 1, options.maxResults),
+      maxResults: state.countryMode ? 20 : options.maxResults,
     }).then(({ results }) => {
       setLoading(false);
       if (input.value !== query) return; // skip outdated
