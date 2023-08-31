@@ -229,6 +229,18 @@ export default function placekitAutocomplete(
     }
   }
 
+  // debounce loading
+  let loadingTimeout;
+  function setLoading(bool) {
+    clearTimeout(loadingTimeout);
+    loading.setAttribute('aria-hidden', true);
+    if (bool) {
+      loadingTimeout = setTimeout(() => {
+        loading.setAttribute('aria-hidden', false);
+      }, 300);
+    }
+  }
+
   // search and update suggestions
   async function search() {
     userValue = null;
@@ -238,7 +250,7 @@ export default function placekitAutocomplete(
       dirty: true,
       freeForm: true,
     });
-    loading.setAttribute('aria-hidden', false);
+    setLoading(true);
     if (!countryMode.disabled) {
       await detectCountry();
     }
@@ -248,7 +260,7 @@ export default function placekitAutocomplete(
       types: state.countryMode ? ['country'] : options.types,
       maxResults: Math.max(state.countryMode ? 3 : 1, options.maxResults),
     }).then(({ results }) => {
-      loading.setAttribute('aria-hidden', true);
+      setLoading(false);
       if (input.value !== query) return; // skip outdated
       suggestions = results;
       suggestionsList.innerHTML = results.length > 0 ? results.map((item) => `
