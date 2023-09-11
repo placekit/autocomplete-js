@@ -255,7 +255,6 @@ export default function placekitAutocomplete(
       await detectCountry();
     }
     pk.search(query, {
-      countryByIP: state.countryMode,
       countries: !!country ? [country.countrycode] : options.countries,
       types: state.countryMode ? ['country'] : options.types,
       maxResults: state.countryMode ? 20 : options.maxResults,
@@ -320,7 +319,6 @@ export default function placekitAutocomplete(
   // detect current country with IP
   function detectCountry() {
     return !!country ? Promise.resolve(country) : pk.reverse({
-      countryByIP: true,
       maxResults: 1,
       types: ['country'],
     }).then(({ results }) => {
