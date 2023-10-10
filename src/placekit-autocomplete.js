@@ -338,7 +338,7 @@ export default function placekitAutocomplete(
   panel.addEventListener('touchstart', () => touchEvent = true);
   panel.addEventListener('end', () => touchEvent = true);
   panel.addEventListener('mouseover', (e) => {
-    if (touchEvent) return;
+    if (touchEvent || (!e.movementX && !e.movementY)) return;
     clearActive();
     e.target.closest('[role="option"]')?.classList.add('pka-active');
   });
