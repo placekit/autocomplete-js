@@ -164,12 +164,12 @@ console.log(pka.options); // { "target": <input ... />, "language": "en", "maxRe
 | `maxResults` | JS client | `integer` | `5` | Number of results per page. |
 | `language` | JS client | `string?` | `undefined` | Preferred language for the results<sup>[(3)](#ft3)</sup>, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. Supported languages are `en` and `fr`. By default the results are displayed in their country's language. |
 | `types` | JS client | `string[]?` | `undefined` | Type of results to show. Array of accepted values: `street`, `city`, `country`, `airport`, `bus`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all. |
-| `countries` | JS client | `string[]?` | `undefined` | Restrict search in specific countries. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes<sup>[(1)](#ft1)</sup>. |
+| `countries` | JS client | `string[]?` | `undefined` | Restrict search in specific countries. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes<sup>[(3)](#ft3)</sup>. |
 | `coordinates` | JS client | `string?` | `undefined` | Coordinates to search around. Automatically set when calling [`pka.requestGeolocation()`](#pkarequestgeolocation). |
 
-<a id="ft1"><b>[1]</b></a>: Ignored if `countries` option is set (Country selector is hidden).
-<a id="ft2"><b>[2]</b></a>: When `types: ['city']` is set, setting `countrySelect: false` enables a worldwide city search.
-<a id="ft3"><b>[3]</b></a>: See [Coverage](https://placekit.io/terms/coverage) for more details.
+- <a id="ft1"><b>[1]</b></a>: Ignored if `countries` option is set (Country selector is hidden).
+- <a id="ft2"><b>[2]</b></a>: When `types: ['city']` is set, setting `countrySelect: false` enables a worldwide city search.
+- <a id="ft3"><b>[3]</b></a>: See [Coverage](https://placekit.io/terms/coverage) for more details.
 
 <details>
 <summary><h4 id="panel-options">Panel options</h4></summary>
