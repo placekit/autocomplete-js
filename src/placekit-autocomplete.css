@@ -187,6 +187,11 @@ input.pka-input,
   padding: calc(var(--pka-scale) * .5) calc(var(--pka-scale) * .75);
 }
 
+.pka-input:not(input) input:disabled,
+input.pka-input:disabled {
+  cursor: not-allowed;
+}
+
 /* input geoloc/clear buttons
 ---------------------------------------- */
 button.pka-input-geolocation,
