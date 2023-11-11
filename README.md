@@ -417,7 +417,7 @@ pka.close();
 
 ### `pka.clear()`
 
-Clears the input value, focus the field, closes the suggestion panel and clear suggestions if `state.geolocation` is false.
+Clears the input value, focus the field, closes the suggestion panel and clear suggestions if `state.geolocation` is false or perform an empty search to reset geolocated suggestions otherwise.
 
 ```js
 pka.clear();
