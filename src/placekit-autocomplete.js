@@ -119,8 +119,8 @@ export default function placekitAutocomplete(
     }
   }
 
-  // set state value and fire event only if it changes
-  function setState(partial, ...args) {
+  // set state value and fire event unless silent
+  function setState(partial, silent = false) {
     if (!isObject(partial)) {
       throw (`TypeError: setState first argument must be a key/value object.`);
     }
@@ -128,8 +128,10 @@ export default function placekitAutocomplete(
     for (const k in state) {
       if (k in partial && partial[k] !== state[k]) {
         state[k] = partial[k];
-        fireEvent(k, state[k], ...args);
         update = true;
+        if (!silent) {
+          fireEvent(k, state[k]);
+        }
       }
     }
     if (update) {
@@ -264,7 +266,6 @@ export default function placekitAutocomplete(
       dirty: true,
       freeForm: true,
     });
-    console.log(state);
     setLoading(true);
     if (!countryMode.disabled) {
       await detectCountry();
@@ -617,13 +618,15 @@ export default function placekitAutocomplete(
   // request the device's location
   client.requestGeolocation = (opts = {}) => {
     return pk.requestGeolocation(opts).then((pos) => {
-      setState({ geolocation: true }, pos);
+      setState({ geolocation: true }, true);
+      fireEvent('geolocation', true, pos);
       setCountry(null); // force redetect country
       input.focus();
       search();
       return pos;
     }).catch((err) => {
-      setState({ geolocation: false }, undefined, err.message);
+      setState({ geolocation: false }, true);
+      fireEvent('geolocation', false, undefined, err.message);
     });
   };
 
