@@ -1,6 +1,6 @@
 {
   "name": "@placekit/autocomplete-js",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "author": "PlaceKit <support@placekit.io>",
   "description": "PlaceKit Autocomplete JavaScript library",
   "license": "MIT",

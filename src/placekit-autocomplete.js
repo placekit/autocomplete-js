@@ -153,6 +153,20 @@ export default function placekitAutocomplete(
     }
   }
 
+  // manually clear input value
+  function clearInput() {
+    setValue('', {
+      notify: true,
+      focus: true,
+    });
+    togglePanel(false);
+    if (state.geolocation) {
+      search();
+    } else {
+      suggestions = [];
+    }
+  }
+
   // restore backed-up user value
   function restoreValue(clear = false) {
     if (userValue !== null) {
@@ -250,6 +264,7 @@ export default function placekitAutocomplete(
       dirty: true,
       freeForm: true,
     });
+    console.log(state);
     setLoading(true);
     if (!countryMode.disabled) {
       await detectCountry();
@@ -400,11 +415,12 @@ export default function placekitAutocomplete(
 
   // keyboard navigation
   function handleKeyNav(e) {
-    if (input === document.activeElement && !!input.value.trim()) {
+    if (input === document.activeElement) {
       const isPanelOpen = panel.classList.contains('pka-open');
       switch (e.key) {
         case 'Up':
         case 'ArrowUp':
+          // move through suggestions or open panel with ALT
           if (isPanelOpen) {
             e.preventDefault();
             if (e.altKey) {
@@ -416,15 +432,19 @@ export default function placekitAutocomplete(
           break;
         case 'Down':
         case 'ArrowDown':
-          if (!isPanelOpen) {
-            e.preventDefault();
-            togglePanel(true);
-          } else if (!e.altKey) {
-            e.preventDefault();
-            moveActive(1);
+          // move through suggestions or open panel with ALT
+          if (suggestions.length > 0) {
+            if (!isPanelOpen) {
+              e.preventDefault();
+              togglePanel(true);
+            } else if (!e.altKey) {
+              e.preventDefault();
+              moveActive(1);
+            }
           }
           break;
         case 'Enter':
+          // apply selected suggestion
           if (isPanelOpen) {
             e.preventDefault();
             applySuggestion();
@@ -432,14 +452,17 @@ export default function placekitAutocomplete(
           break;
         case 'Esc':
         case 'Escape':
+          // close countryMode, then panel, then clear value (default behaviour)
+          e.preventDefault();
           if (isPanelOpen) {
-            e.preventDefault();
             if (state.countryMode) {
               toggleCountryMode(false);
             } else {
               togglePanel(false);
               restoreValue(true);
             }
+          } else {
+            clearInput();
           }
           break;
         case 'Tab':
@@ -555,13 +578,7 @@ export default function placekitAutocomplete(
   };
 
   // clear input value
-  client.clear = () => {
-    setValue('', {
-      notify: true,
-      focus: true,
-    });
-    return client;
-  };
+  client.clear = clearInput;
 
   // register event handler
   client.on = (event, handler) => {
