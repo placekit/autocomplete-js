@@ -623,8 +623,7 @@ export default function placekitAutocomplete(
       search();
       return pos;
     }).catch((err) => {
-      setState({ geolocation: false });
-      throw err;
+      setState({ geolocation: false }, undefined, err.message);
     });
   };
 
