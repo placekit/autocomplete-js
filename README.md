@@ -257,7 +257,7 @@ pka.on('open', () => {})
   .on('dirty', (bool) => {})
   .on('empty', (bool) => {})
   .on('freeForm', (bool) => {})
-  .on('geolocation', (bool, position) => {});
+  .on('geolocation', (bool, position, error) => {});
   .on('countryMode', (bool) => {});
   .on('state', (state) => {})
   .on('countryChange', (item) => {});
@@ -339,6 +339,7 @@ Triggered when `state.geolocation` value changes (a.k.a. when `pka.requestGeoloc
 | --- | --- | --- |
 | `geolocation` | `boolean` | `true` if granted, `false` if denied. |
 | `position` | [`GeolocationPosition \| undefined`](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition) | Passed when `geolocation` is `true`. |
+| `error` | [`string \| undefined`](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition) | Geolocation request error message. |
 
 ##### `countryMode`
 
