@@ -10,15 +10,15 @@
 		"@fontsource/fira-mono": "^5.0.8",
 		"@neoconfetti/svelte": "^1.0.0",
 		"@sveltejs/adapter-auto": "^2.1.1",
-		"@sveltejs/kit": "^1.27.5",
+		"@sveltejs/kit": "^1.27.7",
 		"autoprefixer": "^10.4.16",
-		"postcss": "^8.4.31",
-		"svelte": "^4.2.3",
-		"tailwindcss": "^3.3.5",
-		"vite": "^4.5.0"
+		"postcss": "^8.4.32",
+		"svelte": "^4.2.8",
+		"tailwindcss": "^3.3.6",
+		"vite": "^5.0.7"
 	},
 	"type": "module",
 	"dependencies": {
-		"@placekit/autocomplete-js": "^2.1.5"
+		"@placekit/autocomplete-js": "^2.1.6"
 	}
 }

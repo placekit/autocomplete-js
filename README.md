@@ -46,8 +46,8 @@ For React implementations, check our [PlaceKit Autocomplete React](https://githu
 First, import the library and the default stylesheet into the `<head>` tag in your HTML:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@2.1.5/dist/placekit-autocomplete.min.css" />
-<script src="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@2.1.5"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@2.1.6/dist/placekit-autocomplete.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@2.1.6"></script>
 ```
 
 After importing the library, `placekitAutocomplete` becomes available as a global:
@@ -66,7 +66,7 @@ Or if you are using native ES Modules:
 
 ```html
 <script type="module">
-  import placekitAutocomplete from 'https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@2.1.5/dist/placekit-autocomplete.esm.js';
+  import placekitAutocomplete from 'https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@2.1.6/dist/placekit-autocomplete.esm.js';
   const pka = placekitAutocomplete(/* ... */);
   // ...
 </script>
