@@ -533,9 +533,9 @@ export default function placekitAutocomplete(
     countryMode.disabled = options.countries || !options.countrySelect || typesStr === 'country';
 
     // set inner global search mode state
-    globalSearchMode = !options.countries
-      && !options.countrySelect
-      && ['city', 'city,country', 'country,city', 'country'].includes(typesStr);
+    globalSearchMode = !options.countries &&
+      !options.countrySelect &&
+      ['city', 'city,country', 'country,city', 'country'].includes(typesStr);
 
     // detect current country and inject into input as default value if type is ['country']
     if (options.countryAutoFill && typesStr === 'country' && !state.dirty && !input.value.trim()) {
