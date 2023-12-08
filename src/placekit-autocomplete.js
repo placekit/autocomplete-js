@@ -33,6 +33,7 @@ export default function placekitAutocomplete(
   let userValue = null; // preserve user value on keyboard nav
   let backupValue = null; // preserve user value on country mode
   let country = null;
+  let globalSearchMode = false;
 
   // external
   const client = {};
@@ -270,6 +271,8 @@ export default function placekitAutocomplete(
     if (!countryMode.disabled) {
       await detectCountry();
     }
+    // show flag for cities in global search
+    const flagTypes = globalSearchMode ? ['city', 'country'] : ['country'];
     pk.search(query, {
       countries: !!country ? [country.countrycode] : options.countries,
       types: state.countryMode ? ['country'] : options.types,
@@ -280,7 +283,7 @@ export default function placekitAutocomplete(
       suggestions = results;
       suggestionsList.innerHTML = results.length > 0 ? results.map((item) => `
         <div class="pka-panel-suggestion" role="option" tabindex="-1" aria-selected="false">
-          ${item.type === 'country' ? options.format.flag(item.countrycode) : options.format.icon(item.type || 'pin', item.type)}
+          ${flagTypes.includes(item.type) ? options.format.flag(item.countrycode) : options.format.icon(item.type || 'pin', item.type)}
           <span class="pka-panel-suggestion-label">
             <span class="pka-panel-suggestion-label-name">${item.highlight}</span>
             <span class="pka-panel-suggestion-label-sub">${options.format.sub(item)}</span>
@@ -526,11 +529,16 @@ export default function placekitAutocomplete(
     });
 
     // show country select
-    const onlyCountryType = JSON.stringify(options.types) === '["country"]';
-    countryMode.disabled = options.countries || !options.countrySelect || onlyCountryType;
+    const typesStr = options.types?.join(',').toLowerCase() ?? '';
+    countryMode.disabled = options.countries || !options.countrySelect || typesStr === 'country';
+
+    // set inner global search mode state
+    globalSearchMode = !options.countries
+      && !options.countrySelect
+      && ['city', 'city,country', 'country,city', 'country'].includes(typesStr);
 
     // detect current country and inject into input as default value if type is ['country']
-    if (options.countryAutoFill && onlyCountryType && !state.dirty && !input.value.trim()) {
+    if (options.countryAutoFill && typesStr === 'country' && !state.dirty && !input.value.trim()) {
       detectCountry().then((item) => {
         setValue(item.name, {
           notify: true,
