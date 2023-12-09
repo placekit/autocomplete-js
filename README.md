@@ -55,7 +55,7 @@ After importing the library, `placekitAutocomplete` becomes available as a globa
 ```html
 <input type="search" placeholder="Search place..." class="pka-input" id="placekit" />
 <script>
-  const pka = placekitAutocomplete('<your-api-key>', {
+  const pka = placekitAutocomplete('<your-public-api-key>', {
     target: '#placekit',
     // other options...
   });
@@ -91,7 +91,7 @@ const placekitAutocomplete = require('@placekit/autocomplete-js');
 // ES6 Modules syntax:
 import placekit from '@placekit/autocomplete-js';
 
-const pka = placekitAutocomplete('<your-api-key>', {
+const pka = placekitAutocomplete('<your-public-api-key>', {
   target: '#placekit',
   // other options...
 });
@@ -124,7 +124,7 @@ If you have trouble importing CSS from `node_modules`, copy/paste [its content](
 PlaceKit Autocomplete initialization function returns a PlaceKit Autocomplete client, named `pka` in all examples.
 
 ```js
-const pka = placekitAutocomplete('<your-api-key>', {
+const pka = placekitAutocomplete('<your-public-api-key>', {
   target: '#placekit',
   countries: ['fr'],
   maxResults: 10,
@@ -453,6 +453,23 @@ pka.destroy();
 You have full control over the input element as PlaceKit Autocomplete doesn't style nor alter it by default.
 We still provide a style that you can apply by adding the `.pka-input` class to your input element.
 
+### Dark mode
+
+THe whole autocomplete automatically switches to dark mode if `<body>` has a `.dark` class or a `data-theme="dark"` attribute. 
+
+You can also activate the dark mode on-demand by wrapping the input with a `.dark` class or a `data-theme="dark"` attribute, like `<div class="pka-input dark">...</div>`. The suggestions panel is appended to the body directly and doesn't share any ancestor with the input field other than `<body>`, so to activate the dark mode on-demand, pass the `.dark` class to the panel options: 
+
+```js
+const pka = placekitAutocomplete('<your-public-api-key>', {
+  target: '#placekit',
+  panel: {
+    className: 'dark',
+  },
+});
+```
+
+### CSS Variables
+
 Colors, border-radius, font and overall scale (in `rem`) and even icons are accessible over variables:
 
 ```css
@@ -489,8 +506,8 @@ Colors, border-radius, font and overall scale (in `rem`) and even icons are acce
 }
 
 /* dark mode overrides */
-body.dark,
-body[data-theme="dark"] {
+.dark,
+[data-theme="dark"] {
   --pka-color-accent: 55, 131, 249;
 }
 ```
@@ -499,13 +516,11 @@ You also have full control over flags and icons DOM with `format.flag` and `form
 
 For advanced customization, refer to our [stylesheet](./src/placekit.css) to learn about the available classes if you need to either override some or start a theme from scratch.
 
-A dark mode is available whenever you add `.dark` class or `data-theme="dark"` attribute to the `<body>` element.
-
-⚠️ **NOTE:** you are **not** allowed to hide the PlaceKit logo unless we've delivered a special authorization. To request one, please contact us using [our contact form](https://placekit.io/about#contact).
-
 ## ⚠️ Additional notes
 - Setting a non-empty `value` attribute on the `<input>` will automatically trigger a first search request when the user focuses the input.
 
 ## ⚖️ License
 
 PlaceKit Autocomplete JS Library is an open-sourced software licensed under the [MIT license](./LICENSE).
+
+⚠️ **NOTE:** you are **not** allowed to hide the PlaceKit logo unless we've delivered a special authorization. To request one, please contact us using [our contact form](https://placekit.io/about#contact).
