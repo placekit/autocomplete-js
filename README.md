@@ -19,7 +19,8 @@
   <a href="#-reference">Reference</a> • 
   <a href="#-customize">Customize</a> • 
   <a href="#%EF%B8%8F-additional-notes">Additional notes</a> • 
-  <a href="#%EF%B8%8F-license">License</a>
+  <a href="#%EF%B8%8F-license">License</a> • 
+  <a href="https://github.com/placekit/examples">Examples</a>
 </p>
 
 ---
