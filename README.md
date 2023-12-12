@@ -192,15 +192,17 @@ console.log(pka.options); // { "target": <input ... />, "language": "en", "maxRe
 <details>
 <summary><h4 id="format-options">Format options</h4></summary>
 
-| Option            | Type                                      | Default                                                                | Description                                      |
-| ----------------- | ----------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------ |
-| `flag`            | `(countrycode: string) => string`         | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L56)     | DOM for flags.                                   |
-| `icon`            | `(name: string, label: string) => string` | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L57)     | DOM for icons.                                   |
-| `sub`             | `(item: object) => string`                | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L58-L60) | Format suggestion secondary text                 |
-| `noResults`       | `(query: string) => string`               | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L61)     | Format "no results" text.                        |
-| `value`           | `(item: object) => string`                | `item.name`                                                            | Format input value when user picks a suggestion. |
-| `applySuggestion` | `string`                                  | `"Apply suggestion"`                                                   | ARIA label for "insert" icon.                    |
-| `cancel`          | `string`                                  | `"Cancel"`                                                             | Label for cancelling country selection mode.     |
+| Option            | Type                                      | Default                                                                | Description                                       |
+| ----------------- | ----------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------- |
+| `flag`            | `(countrycode: string) => string`         | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L56)     | DOM for flags.                                    |
+| `icon`            | `(name: string, label: string) => string` | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L57)     | DOM for icons.                                    |
+| `sub`             | `(item: object) => string`                | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L58-L60) | Format suggestion secondary text                  |
+| `noResults`       | `(query: string) => string`               | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L61)     | Format "no results" text.                         |
+| `value`           | `(item: object) => string`                | `item.name`                                                            | Format input value when user picks a suggestion.  |
+| `applySuggestion` | `string`                                  | `"Apply suggestion"`                                                   | ARIA label for "insert" icon.                     |
+| `suggestions`     | `string`                                  | `"Address suggestions"`                                                | ARIA label for `role="listbox"` suggestions list. |
+| `changeCountry`   | `string`                                  | `"Change country"`                                                     | ARIA label for entering country selection mode.   |
+| `cancel`          | `string`                                  | `"Cancel"`                                                             | Label for cancelling country selection mode.      |
 
 </details>
 
