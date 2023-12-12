@@ -8,8 +8,7 @@
 
 <div align="center">
 
-[![NPM](https://img.shields.io/npm/v/@placekit/autocomplete-js?style=flat-square)](https://www.npmjs.com/package/@placekit/autocomplete-js?activeTab=readme)
-[![LICENSE](https://img.shields.io/github/license/placekit/autocomplete-js?style=flat-square)](./LICENSE)
+[![NPM](https://img.shields.io/npm/v/@placekit/autocomplete-js?style=flat-square)](https://www.npmjs.com/package/@placekit/autocomplete-js?activeTab=readme) [![LICENSE](https://img.shields.io/github/license/placekit/autocomplete-js?style=flat-square)](./LICENSE)
 
 </div>
 
@@ -104,8 +103,7 @@ const pka = placekitAutocomplete('<your-public-api-key>', {
 });
 ```
 
-Don't forget to import `@placekit/autocomplete-js/dist/placekit-autocomplete.css` if you want to use our default style.
-If you have trouble importing CSS from `node_modules`, copy/paste [its content](./src/placekit.css) into your own CSS.
+Don't forget to import `@placekit/autocomplete-js/dist/placekit-autocomplete.css` if you want to use our default style. If you have trouble importing CSS from `node_modules`, copy/paste [its content](./src/placekit.css) into your own CSS.
 
 👉 **Check out our [examples](https://github.com/placekit/examples) for different use cases!**
 
@@ -161,18 +159,18 @@ Options from both PlaceKit Autocomplete and PlaceKit JS client, read-only.
 console.log(pka.options); // { "target": <input ... />, "language": "en", "maxResults": 10, ... }
 ```
 
-| Option            | From         | Type              | Default     | Description                                                                                                                                                                                                                                               |
-| ----------------- | ------------ | ----------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `target`          | AutoComplete | `string\|Element` | `-`         | Target input element or (unique) selector.                                                                                                                                                                                                                |
-| `panel`           | AutoComplete | `object?`         | `(...)`     | Suggestions panel options, see [Panel options](#panel-options).                                                                                                                                                                                           |
-| `format`          | AutoComplete | `object?`         | `(...)`     | Formatting options, see [Format options](#format-options).                                                                                                                                                                                                |
-| `countryAutoFill` | AutoComplete | `boolean?`        | `true`      | Automatically detect current country by IP and fill input when `types: ['country']`.                                                                                                                                                                      |
-| `countrySelect`   | AutoComplete | `boolean?`        | `true`      | Show/hide country selector<sup>[(1)](#ft1)[(2)](#ft2)</sup>.                                                                                                                                                                                              |
-| `maxResults`      | JS client    | `integer`         | `5`         | Number of results per page.                                                                                                                                                                                                                               |
-| `language`        | JS client    | `string?`         | `undefined` | Preferred language for the results<sup>[(3)](#ft3)</sup>, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. Supported languages are `en` and `fr`. By default the results are displayed in their country's language. |
-| `types`           | JS client    | `string[]?`       | `undefined` | Type of results to show. Array of accepted values: `street`, `city`, `country`, `airport`, `bus`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all.                                                        |
-| `countries`       | JS client    | `string[]?`       | `undefined` | Restrict search in specific countries. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes<sup>[(3)](#ft3)</sup>.                                                                                                   |
-| `coordinates`     | JS client    | `string?`         | `undefined` | Coordinates to search around. Automatically set when calling [`pka.requestGeolocation()`](#pkarequestgeolocation).                                                                                                                                        |
+| Option | From | Type | Default | Description |
+| --- | --- | --- | --- | --- |
+| `target` | AutoComplete | `string\|Element` | `-` | Target input element or (unique) selector. |
+| `panel` | AutoComplete | `object?` | `(...)` | Suggestions panel options, see [Panel options](#panel-options). |
+| `format` | AutoComplete | `object?` | `(...)` | Formatting options, see [Format options](#format-options). |
+| `countryAutoFill` | AutoComplete | `boolean?` | `true` | Automatically detect current country by IP and fill input when `types: ['country']`. |
+| `countrySelect` | AutoComplete | `boolean?` | `true` | Show/hide country selector<sup>[(1)](#ft1)[(2)](#ft2)</sup>. |
+| `maxResults` | JS client | `integer` | `5` | Number of results per page. |
+| `language` | JS client | `string?` | `undefined` | Preferred language for the results<sup>[(3)](#ft3)</sup>, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. Supported languages are `en` and `fr`. By default the results are displayed in their country's language. |
+| `types` | JS client | `string[]?` | `undefined` | Type of results to show. Array of accepted values: `street`, `city`, `country`, `airport`, `bus`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all. |
+| `countries` | JS client | `string[]?` | `undefined` | Restrict search in specific countries. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes<sup>[(3)](#ft3)</sup>. |
+| `coordinates` | JS client | `string?` | `undefined` | Coordinates to search around. Automatically set when calling [`pka.requestGeolocation()`](#pkarequestgeolocation). |
 
 - <a id="ft1"><b>[1]</b></a>: Ignored if `countries` option is set (Country selector is hidden).
 - <a id="ft2"><b>[2]</b></a>: When `types: ['city']` is set, setting `countrySelect: false` enables a worldwide city search.
@@ -181,26 +179,28 @@ console.log(pka.options); // { "target": <input ... />, "language": "en", "maxRe
 <details>
 <summary><h4 id="panel-options">Panel options</h4></summary>
 
-| Option      | Type                    | Default     | Description                                                                         |
-| ----------- | ----------------------- | ----------- | ----------------------------------------------------------------------------------- |
-| `className` | `string`                | `undefined` | Additional panel CSS class(es).                                                     |
-| `offset`    | `integer`               | `4`         | Gap between input and panel in pixels.                                              |
-| `strategy`  | `'absolute' \| 'fixed'` | `absolute`  | [Popper positioning strategy](https://popper.js.org/docs/v2/constructors/#strategy) |
-| `flip`      | `boolean`               | `false`     | Flip position top when overflowing.                                                 |
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `className` | `string` | `undefined` | Additional panel CSS class(es). |
+| `offset` | `integer` | `4` | Gap between input and panel in pixels. |
+| `strategy` | `'absolute' \| 'fixed'` | `absolute` | [Popper positioning strategy](https://popper.js.org/docs/v2/constructors/#strategy) |
+| `flip` | `boolean` | `false` | Flip position top when overflowing. |
 
 </details>
 <details>
 <summary><h4 id="format-options">Format options</h4></summary>
 
-| Option            | Type                                      | Default                                                                | Description                                      |
-| ----------------- | ----------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------ |
-| `flag`            | `(countrycode: string) => string`         | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L56)     | DOM for flags.                                   |
-| `icon`            | `(name: string, label: string) => string` | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L57)     | DOM for icons.                                   |
-| `sub`             | `(item: object) => string`                | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L58-L60) | Format suggestion secondary text                 |
-| `noResults`       | `(query: string) => string`               | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L61)     | Format "no results" text.                        |
-| `value`           | `(item: object) => string`                | `item.name`                                                            | Format input value when user picks a suggestion. |
-| `applySuggestion` | `string`                                  | `"Apply suggestion"`                                                   | ARIA label for "insert" icon.                    |
-| `cancel`          | `string`                                  | `"Cancel"`                                                             | Label for cancelling country selection mode.     |
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `flag` | `(countrycode: string) => string` | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L56) | DOM for flags. |
+| `icon` | `(name: string, label: string) => string` | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L57) | DOM for icons. |
+| `sub` | `(item: object) => string` | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L58-L60) | Format suggestion secondary text |
+| `noResults` | `(query: string) => string` | [see placekit-autocomplete.js](./src/placekit-autocomplete.js#L61) | Format "no results" text. |
+| `value` | `(item: object) => string` | `item.name` | Format input value when user picks a suggestion. |
+| `applySuggestion` | `string` | `"Apply suggestion"` | ARIA label for "insert" icon. |
+| `suggestions` | `string` | `"Address suggestions"` | ARIA label for `role="listbox"` suggestions list. |
+| `changeCountry` | `string` | `"Change country"` | ARIA label for entering country selection mode. |
+| `cancel` | `string` | `"Cancel"` | Label for cancelling country selection mode. |
 
 </details>
 
@@ -270,8 +270,7 @@ pka.on('open', () => {})
   .on('countryChange', (item) => {});
 ```
 
-If you register a same event twice, the first one will be replaced.
-So, to remove an handler, simply assign `undefined`:
+If you register a same event twice, the first one will be replaced. So, to remove an handler, simply assign `undefined`:
 
 ```js
 pka.on('open'); // clears handler for 'open' event
@@ -342,11 +341,11 @@ Triggered when input value changes.
 
 Triggered when `state.geolocation` value changes (a.k.a. when `pka.requestGeolocation` is called).
 
-| Parameter     | Type                                                                                                       | Description                           |
-| ------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------- |
-| `geolocation` | `boolean`                                                                                                  | `true` if granted, `false` if denied. |
-| `position`    | [`GeolocationPosition \| undefined`](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition) | Passed when `geolocation` is `true`.  |
-| `error`       | [`string \| undefined`](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition)              | Geolocation request error message.    |
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `geolocation` | `boolean` | `true` if granted, `false` if denied. |
+| `position` | [`GeolocationPosition \| undefined`](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition) | Passed when `geolocation` is `true`. |
+| `error` | [`string \| undefined`](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition) | Geolocation request error message. |
 
 ##### `countryMode`
 
@@ -389,13 +388,12 @@ Requests device's geolocation (browser-only). Returns a Promise with a [`Geoloca
 pka.requestGeolocation({ timeout: 10000 }).then((pos) => console.log(pos.coords));
 ```
 
-| Parameter      | Type                           | Description                                                                                                                           |
-| -------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `opts`         | `key-value mapping` (optional) | `navigator.geolocation.getCurrentPosition` [options](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition) |
-| `cancelUpdate` | `boolean` (optional)           | If `false` (default), suggestions list updates immediately based on device location.                                                  |
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `opts` | `key-value mapping` (optional) | `navigator.geolocation.getCurrentPosition` [options](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition) |
+| `cancelUpdate` | `boolean` (optional) | If `false` (default), suggestions list updates immediately based on device location. |
 
-The location will be store in the `coordinates` global options, you can still manually override it.
-`state.geolocation` will be set to `true`, dispatching both the `geolocation` and `state` events.
+The location will be store in the `coordinates` global options, you can still manually override it. `state.geolocation` will be set to `true`, dispatching both the `geolocation` and `state` events.
 
 ### `pka.clearGeolocation()`
 
@@ -435,10 +433,10 @@ pka.clear();
 
 Manually set the input value. Useful for third-party wrappers like React.
 
-| Parameter | Type                 | Description                                                                             |
-| --------- | -------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| `value`   | `string              | null` (optional)                                                                        | New input value, operation ignored if `undefined` or `null`. |
-| `notify`  | `boolean` (optional) | Pass `true` to dispatch `change` and `input` events and update state (default `false`). |
+| Parameter | Type | Description |
+| --- | --- | --- | --- |
+| `value` | `string | null` (optional) | New input value, operation ignored if `undefined` or `null`. |
+| `notify` | `boolean` (optional) | Pass `true` to dispatch `change` and `input` events and update state (default `false`). |
 
 ```js
 pka.setValue('new value');
@@ -457,8 +455,7 @@ pka.destroy();
 
 ## 💅 Customize
 
-You have full control over the input element as PlaceKit Autocomplete doesn't style nor alter it by default.
-We still provide a style that you can apply by adding the `.pka-input` class to your input element.
+You have full control over the input element as PlaceKit Autocomplete doesn't style nor alter it by default. We still provide a style that you can apply by adding the `.pka-input` class to your input element.
 
 ### Dark mode
 

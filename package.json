@@ -1,6 +1,6 @@
 {
   "name": "@placekit/autocomplete-js",
-  "version": "2.1.7",
+  "version": "2.1.8",
   "author": "PlaceKit <support@placekit.io>",
   "description": "PlaceKit Autocomplete JavaScript library",
   "license": "MIT",
@@ -51,7 +51,7 @@
     "postcss-banner": "^4.0.1",
     "prettier": "^3.1.1",
     "rimraf": "^5.0.5",
-    "rollup": "^4.7.0",
+    "rollup": "^4.8.0",
     "rollup-plugin-cleanup": "^3.2.1",
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-postcss": "^4.0.2"
