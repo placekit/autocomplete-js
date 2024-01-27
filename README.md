@@ -51,9 +51,9 @@ First, import the library and the default stylesheet into the `<head>` tag in yo
 ```html
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@2.1.6/dist/placekit-autocomplete.min.css"
+  href="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@latest/dist/placekit-autocomplete.min.css"
 />
-<script src="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@2.1.6"></script>
+<script src="https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@latest"></script>
 ```
 
 After importing the library, `placekitAutocomplete` becomes available as a global:
@@ -72,7 +72,7 @@ Or if you are using native ES Modules:
 
 ```html
 <script type="module">
-  import placekitAutocomplete from 'https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@2.1.6/dist/placekit-autocomplete.esm.js';
+  import placekitAutocomplete from 'https://cdn.jsdelivr.net/npm/@placekit/autocomplete-js@latest/dist/placekit-autocomplete.esm.mjs';
   const pka = placekitAutocomplete(/* ... */);
   // ...
 </script>
