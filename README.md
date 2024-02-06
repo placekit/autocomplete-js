@@ -519,7 +519,7 @@ Colors, border-radius, font and overall scale (in `rem`) and even icons are acce
 
 You also have full control over flags and icons DOM with `format.flag` and `format.icon` options (see [Format options](#format-options)).
 
-For advanced customization, refer to our [stylesheet](./src/placekit.css) to learn about the available classes if you need to either override some or start a theme from scratch.
+For advanced customization, refer to our [stylesheet](./src/placekit-autocomplete.css) to learn about the available classes if you need to either override some or start a theme from scratch.
 
 ## ⚠️ Additional notes
 
