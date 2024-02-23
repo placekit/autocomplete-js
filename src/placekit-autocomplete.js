@@ -68,7 +68,11 @@ export default function placekitAutocomplete(
           ? ''
           : item.type === 'city'
             ? [item.zipcode.sort()[0], item.country].filter((s) => s).join(' ')
-            : [item.city, item.county].filter((s) => s).join(', '),
+            : item.type === 'county'
+              ? [item.administrative, item.country].filter((s) => s).join(' ')
+              : item.type === 'administrative'
+                ? [item.country].filter((s) => s).join(' ')
+                : [item.city, item.county].filter((s) => s).join(', '),
       noResults: (query) => `No results for ${query}`,
       value: (item) => item.name,
       applySuggestion: 'Apply suggestion',
