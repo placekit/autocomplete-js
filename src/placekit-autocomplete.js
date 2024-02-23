@@ -63,12 +63,20 @@ export default function placekitAutocomplete(
         `<span class="pka-icon pka-icon-${name}" role="img" aria-label="${
           label || 'icon'
         }"></span>`,
-      sub: (item) =>
-        item.type === 'country'
-          ? ''
-          : item.type === 'city'
-            ? [item.zipcode.sort()[0], item.country].filter((s) => s).join(' ')
-            : [item.city, item.county].filter((s) => s).join(', '),
+      sub: (item) => {
+        switch (item.type) {
+          case 'administrative':
+            return [item.country].filter((s) => s).join(' ');
+          case 'city':
+            return [item.zipcode.sort()[0], item.country].filter((s) => s).join(' ');
+          case 'country':
+            return '';
+          case 'county':
+            return [item.administrative, item.country].filter((s) => s).join(' ');
+          default:
+            return [item.city, item.county].filter((s) => s).join(', ');
+        }
+      },
       noResults: (query) => `No results for ${query}`,
       value: (item) => item.name,
       applySuggestion: 'Apply suggestion',

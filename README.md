@@ -168,7 +168,7 @@ console.log(pka.options); // { "target": <input ... />, "language": "en", "maxRe
 | `countrySelect` | AutoComplete | `boolean?` | `true` | Show/hide country selector<sup>[(1)](#ft1)[(2)](#ft2)</sup>. |
 | `maxResults` | JS client | `integer` | `5` | Number of results per page. |
 | `language` | JS client | `string?` | `undefined` | Preferred language for the results<sup>[(3)](#ft3)</sup>, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. Supported languages are `en` and `fr`. By default the results are displayed in their country's language. |
-| `types` | JS client | `string[]?` | `undefined` | Type of results to show. Array of accepted values: `street`, `city`, `country`, `airport`, `bus`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all. |
+| `types` | JS client | `string[]?` | `undefined` | Type of results to show. Array of accepted values: `street`, `city`, `country`, `administrative`, `county`, `airport`, `bus`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all. |
 | `countries` | JS client | `string[]?` | `undefined` | Restrict search in specific countries. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes<sup>[(3)](#ft3)</sup>. |
 | `coordinates` | JS client | `string?` | `undefined` | Coordinates to search around. Automatically set when calling [`pka.requestGeolocation()`](#pkarequestgeolocation). |
 
@@ -493,6 +493,8 @@ Colors, border-radius, font and overall scale (in `rem`) and even icons are acce
 
   --pka-icon-pin: url('...');
   --pka-icon-street: var(--pka-icon-pin);
+  --pka-icon-administrative: var(--pka-icon-pin);
+  --pka-icon-county: var(--pka-icon-pin);
   --pka-icon-city: url('...');
   --pka-icon-airport: url('...');
   --pka-icon-bus: url('...');
