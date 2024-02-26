@@ -1,6 +1,6 @@
 {
   "name": "@placekit/autocomplete-js",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "author": "PlaceKit <support@placekit.io>",
   "description": "PlaceKit Autocomplete JavaScript library",
   "keywords": [
@@ -51,7 +51,7 @@
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "autoprefixer": "^10.4.17",
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
     "npm-watch": "^0.11.0",
