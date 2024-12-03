@@ -435,7 +435,7 @@ Manually set the input value. Useful for third-party wrappers like React.
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `value` | `string | null` (optional) | New input value, operation ignored if `undefined` or `null`. |
+| `value` | `string \| null` (optional) | New input value, operation ignored if `undefined` or `null`. |
 | `notify` | `boolean` (optional) | Pass `true` to dispatch `change` and `input` events and update state (default `false`). |
 
 ```js
