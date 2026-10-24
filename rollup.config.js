@@ -7,7 +7,7 @@ import copy from 'rollup-plugin-copy';
 import postcss from 'rollup-plugin-postcss';
 import postcssBanner from 'postcss-banner';
 
-import pkg from './package.json' assert { type: 'json' };
+import pkg from './package.json' with { type: 'json' };
 const banner = [
   `/*! ${pkg.name} v${pkg.version}`,
   '© placekit.io',
